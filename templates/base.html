@@ -14,9 +14,6 @@
 	<body>
 		<div class="container-fluid">
 			<section class="content">
-				<header>
-					
-				</header>
 				{% for message in get_flashed_messages() %}
 					<div class="flash alert alert-info" role="alert">{{ message }}</div>
 				{% endfor %}

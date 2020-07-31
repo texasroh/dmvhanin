@@ -1,0 +1,7 @@
+body {
+	background-color: #D9E5FF;
+	height: 500px;
+}
+.container-fluid, .content{
+	height: 100%;
+}
