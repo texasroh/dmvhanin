@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 
 def create_app():
@@ -6,7 +6,7 @@ def create_app():
     
     @app.route("/")
     def index():
-        return "Welcome to DMV 한인"
+        return render_template('index.html')
         
     return app
     
