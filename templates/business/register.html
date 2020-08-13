@@ -1,0 +1,83 @@
+{% extends 'business/business_base.html' %}
+
+{% block header %}
+	<h1>{% block title %}비지니스 등록 신청{% endblock %}</h1>
+{% endblock %}
+
+{% block business_content %}
+<h5 class="modal-title">비지니스 등록 신청</h5>
+<br>
+<p>업소등록을 신청하시면 24시간내 검토 후 이메일로 등록여부를 알려드립니다.</p>
+<p>아래 업소명, 연락처, 주소, 간단한 소개 및 설명은 반드시 적어주시고</p>
+<p>홈페이지 및 사진은 옵션사항입니다.</p>
+<p>온라인 비지니스의 경우에는 주소를 적지 않으셔도 됩니다.</p>
+<hr>
+<form method="post" enctype="multipart/form-data">
+    <label for="business_name_kor">업소명</label>
+    <div class="form-row form-group">
+        <div class = "col-md-6">
+            <input type="text" class="form-control" id="business_name_kor" name="business_name_kor" placeholder="한글" required>
+        </div>
+        <div class = "col-md-6">
+            <input type="text" class="form-control" id="business_name_eng" name="business_name_eng" placeholder="English" required>
+        </div>
+    </div>
+    <label for="phone_number">연락처</label>
+    <div class="form-row form-group">
+        <div class = "col-md-6">
+            <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="전화번호" required>
+        </div>
+        <div class = "col-md-6">
+            <input type="text" class="form-control" id="email" name="email" placeholder="이메일" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="address">Address</label>
+        <input type="text" class="form-control" id="address" name="address">
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="city">City</label>
+            <input type="text" class="form-control" id="city" name="city">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="state">State</label>
+            <select id="state" class="form-control" name="state">
+                <option value="" selected>Choose...</option>
+                <option value="dc">DC</option>
+                <option value="md">MD</option>
+                <option value="va">VA</option>
+            </select>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="zipcode">ZipCode</label>
+            <input type="text" class="form-control" id="zipcode" name="zipcode">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="homepage">홈페이지</label>
+        <input type="text" class="form-control" id="homepage" name="homepage">
+    </div>
+    <div class="form-group">
+        <label for="description">간단한 소개 / 설명</label>
+        <textarea class="form-control" id="description" name="description" rows="5"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="file1">사진첨부 (메뉴, 실내사진 등 최대 5장)</label>
+        <input type="file" class="form-control-file" id="file1" name="file1">
+    </div>
+    <div class="form-group">
+        <input type="file" class="form-control-file" id="file2" name="file2">
+    </div>
+    <div class="form-group">
+        <input type="file" class="form-control-file" id="file3" name="file3">
+    </div>
+    <div class="form-group">
+        <input type="file" class="form-control-file" id="file4" name="file4">
+    </div>
+    <div class="form-group">
+        <input type="file" class="form-control-file" id="file5" name="file5">
+    </div>
+    <button type="submit" class="btn btn-success">신청</button>
+</form>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'auth/auth_base.html' %}
+
+{% block header %}
+	<h1>{% block title %}{% block modal_title %}{% if business_flag %}비지니스 {% endif %}회원가입{% endblock %}{% endblock %}</h1>
+{% endblock %}
+
+{% block auth_content %}
+    <form method="post" {% if business_flag %}action="{{ url_for('auth.register') }}" {% endif %}>
+        <div class="form-group row">
+            <label class="col-sm-5 col-form-label" for="user_id">아이디 <span class="red">*</span></label>
+            <input class="form-control col-sm-7" placeholder="최소 4자" name="user_id" id="user_id" required autofocus>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-5 col-form-label" for="password">비밀번호 <span class="red">*</span></label>
+            <input class="form-control col-sm-7" type="password" name="password" id="password" required>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-5 col-form-label" for="confirm_password">비밀번호 확인 <span class="red">*</span></label>
+            <input class="form-control col-sm-7" type="password" name="confirm_password" id="confirm_password" required>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-5 col-form-label" for="confirm_password">이메일{% if business_flag %} <span class="red">*</span>{% endif %}</label>
+            <input class="form-control col-sm-7" type="email" name="email" id="email" {% if business_flag %}required{% endif %}>
+        </div>
+        <hr>
+        <div>
+             <p><span class="red">*</span> : 필수 입력사항</p>
+             {% if not business_flag %}<p>이메일 등록시 메일함을 확인해주세요<br>인증시 아이디 및 비밀번호 찾기기능 가능</p>{% endif %}
+        </div>
+        <div class="row">
+            <div class="col-sm-12 d-flex justify-content-end">
+                <input type="submit" class="btn btn-primary" value="{% if business_flag %}비지니스 {% endif %}회원가입">
+            </div>
+        </div>
+        <input type="hidden" id="g-recaptcha" name="g-recaptcha">
+    </form>
+{% endblock %}
+
+{% block recaptcha %}
+<script src="https://www.google.com/recaptcha/api.js?render=6Lf0y70ZAAAAABkdhQD9j9KfhNAzqNhJuYBvjKvn"></script>
+<script>
+      function onClick(e) {
+        e.preventDefault();
+        grecaptcha.ready(function() {
+          grecaptcha.execute('6Lf0y70ZAAAAABkdhQD9j9KfhNAzqNhJuYBvjKvn', {action: 'submit'}).then(function(token) {
+              document.getElementById('reCaptcha').value = token;
+              console.log(token);
+          });
+        });
+      }
+  </script>
+{% endblock %}

@@ -1,7 +1,27 @@
-body {
-	background-color: #D9E5FF;
-	height: 500px;
+body{
+	height: 100%
 }
-.container-fluid, .content{
-	height: 100%;
+.logo {
+	margin: 1rem;
+	width: 15rem;
+}
+
+.navbar {
+	border-top: 2px solid #EAEAEA;
+	border-bottom: 2px solid #EAEAEA;
+	margin-bottom: 1rem;
+}
+
+.red {
+    color: red;
+}
+
+.teal {
+    color: teal;
+}
+
+.carousel-item-custom{
+    padding-bottom: 5rem;
+    padding-top: 5rem;
+    background-color: gray;
 }
