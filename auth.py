@@ -14,7 +14,7 @@ salt = Config.SALT
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-def generate_hash(s):
+def generate_hash(s=''):
     myStr = str(datetime.now())+s+salt
     myHash = hashlib.sha256(str(myStr).encode('utf-8')).hexdigest()
     return myHash

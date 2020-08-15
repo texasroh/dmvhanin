@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block header %}
+	<h1>{% block title %}Welcome{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h3><p class="text-center">
+        {% if s == 'request' %}
+        업소등록 신청을 해주셔서 감사합니다.<br>
+        검토후 이메일 답변드리겠습니다.
+        {% else %}
+        ERROR
+        {% endif %}
+        </p></h3>
+    </div>
+{% endblock %}

@@ -1,4 +1,3 @@
-from flask import current_app, url_for
 from dmvhanin.config import Config
 from werkzeug.utils import secure_filename
 import os
@@ -16,8 +15,13 @@ def upload_file_to_local(file, filename):
     if not valid:
         return False
         
-    file.save(current_app.config['UPLOAD_FOLDER'], filename)
-    image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+    if Config.OS == 'windows':
+        file.save(filename)
+        image_path = filename
+    elif Config.OS == 'linux':
+        file.save(Config.UPLOAD_FOLDER, filename)
+        image_path = os.path.join(Config.UPLOAD_FOLDER, filename)
+    
     return image_path
     
 def upload_file_to_s3(file, filename):

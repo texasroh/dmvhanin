@@ -25,3 +25,5 @@ class Config:
     
     # filestream
     ALLOWED_EXTENSIONS = {'png','jpg','jpeg'}
+    UPLOAD_FOLDER=environ.get('UPLOAD_FOLDER')
+    OS=environ.get('OS_name')

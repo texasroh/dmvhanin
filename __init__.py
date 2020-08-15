@@ -10,13 +10,16 @@ def create_app():
     app = Flask(__name__)
     app.config.from_mapping(
         SECRET_KEY='a;slgbqgzjlxhqez;lkdghqkbzfasd',
-        UPLOAD_FOLDER='/static/business_uploaded_pics',
         MAX_CONTENT_LENGTH=16*1024*1024,
     )
     
     @app.route("/")
     def index():
         return render_template('index.html')
+        
+    @app.route('/thank/<s>')
+    def thank(s):
+        return render_template('thank.html', s = s)
         
     from . import auth
     app.register_blueprint(auth.bp)
