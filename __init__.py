@@ -12,9 +12,7 @@ def create_app():
         SECRET_KEY='a;slgbqgzjlxhqez;lkdghqkbzfasd',
         MAX_CONTENT_LENGTH=16*1024*1024,
     )
-    APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-    UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static/uploads')
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
     @app.route("/")
     def index():
         return render_template('index.html')
