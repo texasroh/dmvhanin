@@ -11,7 +11,10 @@ bp = Blueprint('business', __name__, url_prefix='/business')
 
 @bp.route("/", methods=('GET', ))
 def index():
-    return redirect(url_for('index'))
+    list = db.select_rows(
+        "SELECT * FROM business WHERE active_flag = TRUE"
+    )
+    return 'hello'
 
 @bp.route('/register_request', methods=('GET','POST'))
 def register_request():
@@ -51,6 +54,3 @@ def register_request():
     
     return render_template('business/request.html')
     
-@bp.route('/test', methods=('GET',))
-def test():
-    return url_for('static', filename='css/style.css')

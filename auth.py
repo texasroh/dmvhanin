@@ -215,12 +215,12 @@ def email_verify(hash):
     )
     
     if not res:
-        s = "유효하지 않은 링크입니다."
+        s = "not_valid_link"
     else:
         if db.select_row(
             "SELECT * FROM user_acct WHERE user_id = %s", [res['user_id']]
         )['email_verified'] == True:
-            s = "이미 이메일 인증된 계정입니다."
+            s = "used_veri_acct"
         else:
             db.update_rows(
                 "UPDATE user_acct SET email_verified = True WHERE user_id = %s", [res['user_id']]
@@ -228,9 +228,9 @@ def email_verify(hash):
             db.update_rows(
                 "UPDATE email_verify SET used = True WHERE hash = %s", [hash]
             )
-            s = "{} - 이메일 인증 완료".format(res['user_id'])
+            s = "verify"
     
-    return s
+    return redirect(url_for('thank', s=s))
     
     
 @bp.route('/find_id_pwd', methods=('GET', 'POST'))

@@ -23,11 +23,10 @@ class Database():
                                              password=self.pwd,
                                              port=self.port,
                                              dbname=self.dbname)
+                print('Connection opened successfully.')
             except psycopg2.DatabaseError as e:
                 print(e)
                 sys.exit()
-            finally:
-                print('Connection opened successfully.')
         else:
             try:
                 with self.conn.cursor() as cur:

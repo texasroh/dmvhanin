@@ -10,6 +10,12 @@
         {% if s == 'request' %}
         업소등록 신청을 해주셔서 감사합니다.<br>
         검토후 이메일 답변드리겠습니다.
+        {% elif s == 'not_valid_link' %}
+        유효하지 않은 링크입니다.
+        {% elif s == 'used_veri_acct' %}
+        이미 이메일 인증된 계정입니다.
+        {% elif s == 'verify' %}
+        이메일 인증이 완료되었습니다.
         {% else %}
         ERROR
         {% endif %}
