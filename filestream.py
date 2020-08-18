@@ -20,8 +20,8 @@ def upload_file_to_local(file, filename):
         image_path = filename
     elif Config.OS == 'linux':
         path = os.path.join(os.path.dirname(__file__), Config.UPLOAD_FOLDER)
-        file.save(os.path.dirname(__file__), filename)
-        image_path = os.path.join(os.path.dirname(__file__), filename)
+        file.save(Config.UPLOAD_FOLDER, filename)
+        image_path = os.path.join(Config.UPLOAD_FOLDER, filename)
 
     return image_path
     
