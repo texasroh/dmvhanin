@@ -1,3 +1,4 @@
+from flask import current_app
 from .config import Config
 from werkzeug.utils import secure_filename
 import os
@@ -20,7 +21,7 @@ def upload_file_to_local(file, filename):
         image_path = filename
     elif Config.OS == 'linux':
         path = os.path.join(os.path.dirname(__file__), Config.UPLOAD_FOLDER)
-        file.save('business_uploaded_pics/', filename)
+        file.save(current_app.config['UPLOAD_FOLDER'], filename)
         image_path = os.path.join(Config.UPLOAD_FOLDER, filename)
 
     return image_path
