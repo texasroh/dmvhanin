@@ -14,14 +14,15 @@ def upload_file_to_local(file, filename):
     valid, filename = allowed_file(filename)
     if not valid:
         return False
-        
+
     if Config.OS == 'windows':
         file.save(filename)
         image_path = filename
     elif Config.OS == 'linux':
-        file.save(Config.UPLOAD_FOLDER, filename)
-        image_path = os.path.join(Config.UPLOAD_FOLDER, filename)
-    
+        path = os.path.join(os.path.dirname(__file__), Config.UPLOAD_FOLDER)
+        file.save(os.path.dirname(__file__), filename)
+        image_path = os.path.join(os.path.dirname(__file__), filename)
+
     return image_path
     
 def upload_file_to_s3(file, filename):
