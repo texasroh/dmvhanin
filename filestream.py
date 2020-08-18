@@ -1,4 +1,4 @@
-from dmvhanin.config import Config
+from .config import Config
 from werkzeug.utils import secure_filename
 import os
 

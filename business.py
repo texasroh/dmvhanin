@@ -1,8 +1,8 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app,
 )
-from dmvhanin.filestream import upload_file_to_local, upload_file_to_s3
-from dmvhanin import db
+from .filestream import upload_file_to_local, upload_file_to_s3
+from . import db
 from .auth import generate_hash
 import os
 

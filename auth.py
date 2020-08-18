@@ -8,7 +8,7 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import db, gmail
-from dmvhanin.config import Config
+from .config import Config
 
 salt = Config.SALT
 

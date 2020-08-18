@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from .database import Database
-from dmvhanin.send_email import Gmail
+from .send_email import Gmail
 
 import os
 
