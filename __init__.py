@@ -26,6 +26,9 @@ def create_app():
     
     from . import business
     app.register_blueprint(business.bp)
+    
+    from . import buynsell
+    app.register_blueprint(buynsell.bp)
         
     return app
     

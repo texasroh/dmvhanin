@@ -1,0 +1,17 @@
+{% extends 'business/business_base.html' %}
+
+{% block business_content %}
+<ul>
+    {% for cat1, cat2_list in cat_data.items() %}
+        <li>
+        {{ cat1 }}
+            <ul class="nav">
+            {% for cat2 in cat2_list %}
+                <li class="nav-item">| <a class = "" href="{{ url_for('business.business_list', category_id = cat2[0]) }}">{{ cat2[1] }}</a>&nbsp </li>
+            {% endfor %}
+            </ul>
+        </li>
+        <br>
+    {% endfor %}
+</ul>
+{% endblock %}

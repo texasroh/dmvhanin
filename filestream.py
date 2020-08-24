@@ -19,15 +19,6 @@ def upload_file_to_local(file, filename):
     image_path = os.path.join(Config.UPLOAD_FOLDER, filename)
     file.save(image_path)
     
-    '''
-    if Config.OS == 'windows':
-        file.save(os.path.join('business_uploaded_pics', filename))
-        image_path = filename
-    elif Config.OS == 'linux':
-        path = os.path.join(os.path.dirname(__file__), Config.UPLOAD_FOLDER)
-        file.save(current_app.config['UPLOAD_FOLDER'], filename)
-        image_path = os.path.join(Config.UPLOAD_FOLDER, filename)
-    '''
     return image_path
     
 def upload_file_to_s3(file, filename):

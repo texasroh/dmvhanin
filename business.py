@@ -3,7 +3,7 @@ from flask import (
 )
 from .filestream import upload_file_to_local, upload_file_to_s3
 from . import db
-from .auth import generate_hash
+from .auth import generate_hash, admin_only
 import os
 
 bp = Blueprint('business', __name__, url_prefix='/business')
@@ -11,10 +11,18 @@ bp = Blueprint('business', __name__, url_prefix='/business')
 
 @bp.route("/", methods=('GET', ))
 def index():
-    list = db.select_rows(
-        "SELECT * FROM business WHERE active_flag = TRUE"
+    cat_list = db.select_rows(
+        "SELECT * FROM business_category ORDER BY 1"
     )
-    return 'hello'
+    cat1_list = cat_list['category1'].unique()
+    cat_data = {}
+    for cat1 in cat1_list:
+        cat_data[cat1] = cat_list[cat_list['category1'] == cat1][['category_id', 'category2']].to_dict('split')['data']
+    return render_template('business/index.html', cat_data = cat_data)
+
+@bp.route('/list/<category_id>', methods=('GET', ))
+def business_list(category1, category2):
+    return render_template('business/list.html')
 
 @bp.route('/register_request', methods=('GET','POST'))
 def register_request():
