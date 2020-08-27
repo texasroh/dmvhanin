@@ -47,6 +47,7 @@ class Database():
         self.connect()
         
         records = pd.read_sql(query, self.conn, params = parameters, **kwargs)
+        #self.close()
         if records.empty:
             return None
         return records.to_dict('records')[0]
@@ -57,6 +58,7 @@ class Database():
         self.connect()
 
         records = pd.read_sql(query, self.conn, params = parameters, **kwargs)
+        #self.close()
         return records
 
     
@@ -66,6 +68,6 @@ class Database():
         with self.conn.cursor() as cur:
             cur.execute(query, parameters)
             self.conn.commit()
-            cur.close()
-            return f"{cur.rowcount} rows affected."
-        self.close()
+
+        #self.close()
+        return f"{cur.rowcount} rows affected."

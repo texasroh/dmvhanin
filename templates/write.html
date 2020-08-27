@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block summernote %}
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class = "container" action="{{ url_for('test') }}">
+    
+        <form method="post">
+            <div class="form-group row">
+                <label class = "col-md-2" for = "title">제목</label>
+                <div class="col-md-10">
+                    <input class = "form-control" id= "title" name="title" type="text">
+                </div>
+            </div>
+            <textarea id="summernote" name="content"></textarea>
+            <br>
+            <button type="submit" class="btn btn-info">작성</button>
+        </form>
+    </div>
+    <script>
+      $('#summernote').summernote({
+        placeholder: '',
+        tabsize: 2,
+        height: 400,
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'picture', 'video']],
+          ['view', ['fullscreen', 'codeview', 'help']]
+        ]
+      });
+    </script>
+{% endblock %}

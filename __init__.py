@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from .database import Database
 from .send_email import Gmail
 
@@ -29,6 +29,17 @@ def create_app():
     
     from . import buynsell
     app.register_blueprint(buynsell.bp)
+    
+    @app.route('/test', methods=('GET','POST'))
+    def test():
+        print(request)
+        return request
+        
+    @app.route('/write', methods=('GET', 'POST'))
+    def write():
+        if request.method=='POST':
+            return str(request.form['content'])
+        return render_template('write.html')
         
     return app
     

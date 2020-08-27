@@ -12,17 +12,48 @@ bp = Blueprint('business', __name__, url_prefix='/business')
 @bp.route("/", methods=('GET', ))
 def index():
     cat_list = db.select_rows(
-        "SELECT * FROM business_category ORDER BY 1"
-    )
+        "SELECT * FROM business_category a "\
+        "INNER JOIN business b ON a.category_id = b.category_id "\
+        "ORDER BY a.category_id"
+        #"SELECT * FROM business_category ORDER BY 1"
+    )[['category_id', 'category1', 'category2']].drop_duplicates()
+    cat_list = cat_list.loc[:, ~cat_list.columns.duplicated()]
     cat1_list = cat_list['category1'].unique()
     cat_data = {}
     for cat1 in cat1_list:
-        cat_data[cat1] = cat_list[cat_list['category1'] == cat1][['category_id', 'category2']].to_dict('split')['data']
+        cat_data[cat1] = cat_list[cat_list['category1'] == cat1][['category_id', 'category2']].to_dict('records')
     return render_template('business/index.html', cat_data = cat_data)
 
-@bp.route('/list/<category_id>', methods=('GET', ))
-def business_list(category1, category2):
-    return render_template('business/list.html')
+@bp.route('/list/<int:category_id>', methods=('GET', ))
+def business_list(category_id):
+    cat_name = db.select_row(
+        "SELECT * FROM business_category WHERE category_id = %s",
+        [category_id]
+    )
+    biz_list = db.select_rows(
+        'SELECT * FROM business WHERE category_id = %s ORDER BY business_name_kor collate "ko_KR.utf8"',
+        [category_id]
+    )
+    if biz_list.empty:
+        biz_list = None
+    else:
+        biz_list = biz_list.to_dict('records')
+    return render_template('business/list.html', cat_name = cat_name, biz_list=biz_list)
+    
+
+@bp.route('/<int:business_id>', methods=('GET', ))
+def business_detail(business_id):
+    biz = db.select_row(
+        "SELECT * FROM business WHERE business_id = %s",
+        [business_id]
+    )
+    
+    if not biz:
+        redirect(url_for('business.index'))
+        
+    return render_template('business/detail.html', biz = biz)
+
+
 
 @bp.route('/register_request', methods=('GET','POST'))
 def register_request():

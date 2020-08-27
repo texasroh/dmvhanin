@@ -1,1 +1,19 @@
-hello
+{% extends 'business/business_base.html' %}
+
+
+{% block business_content %}
+<h2>{{ cat_name['category1'] }} - {{ cat_name['category2'] }}</h2>
+{% for biz in biz_list %}
+<div class="card">
+  <div class="card-body">
+    <a href="{{url_for('business.business_detail', business_id = biz['business_id'])}}">
+      <h5 class="card-title">{{biz['business_name_kor']}}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{biz['business_name_eng']}}</h6>
+    </a>
+    <p class="card-text">{{biz['description'] if biz['description']}}</p>
+    <p class="card-text">{{biz['address'] if biz['address']}}, {{biz['city'] if biz['city']}}, {{biz['state'] if biz['state']}} {{biz['zipcode'] if biz['zipcode']}}</p>
+    <p class="card-text">{{biz['phone_number'] if biz['phone_number']}}</p>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

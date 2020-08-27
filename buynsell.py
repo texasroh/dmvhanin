@@ -9,3 +9,8 @@ bp = Blueprint('buynsell', __name__, url_prefix='/buynsell')
 @bp.route('/', methods=('GET',))
 def index():
     return render_template('buynsell/index.html')
+    
+    
+@bp.route('/write', methods=('GET', 'POST'))
+def write():
+    return render_template('write.html')
