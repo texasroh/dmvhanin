@@ -202,6 +202,7 @@ def account_info():
                 )
                 gmail.email_verify(email_addr, hash)
                 flash('이메일을 확인하시고 인증링크를 클릭해주세요')
+                return redirect(url_for('auth.account_info'))
             else:
                 flash("이메일을 입력하세요")
         
@@ -211,15 +212,12 @@ def account_info():
 @bp.route('/email_verify/<hash>', methods=('GET', 'POST'))
 def email_verify(hash):
     res = db.select_row(
-        "SELECT * FROM email_verify WHERE hash = %s AND used = FALSE AND created BETWEEN now() - interval '1 day' AND now()", [hash]
+        "SELECT * FROM email_verify WHERE hash = %s AND created BETWEEN now() - interval '1 day' AND now()", [hash]
     )
-    
     if not res:
         s = "not_valid_link"
     else:
-        if db.select_row(
-            "SELECT * FROM user_acct WHERE user_id = %s", [res['user_id']]
-        )['email_verified'] == True:
+        if res['used']:
             s = "used_veri_acct"
         else:
             db.update_rows(

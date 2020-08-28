@@ -34,11 +34,10 @@ def business_list(category_id):
         'SELECT * FROM business WHERE category_id = %s ORDER BY business_name_kor collate "ko_KR.utf8"',
         [category_id]
     )
-    if biz_list.empty:
-        biz_list = None
-    else:
-        biz_list = biz_list.to_dict('records')
-    return render_template('business/list.html', cat_name = cat_name, biz_list=biz_list)
+    if not cat_name or biz_list.empty:
+        return redirect(url_for('business.index'))
+    biz_list = biz_list.to_dict('records')
+    return render_template('business/list.html', cat_name = cat_name, biz_list=biz_list, biz_num = len(biz_list))
     
 
 @bp.route('/<int:business_id>', methods=('GET', ))
@@ -49,7 +48,7 @@ def business_detail(business_id):
     )
     
     if not biz:
-        redirect(url_for('business.index'))
+        return redirect(url_for('business.index'))
         
     return render_template('business/detail.html', biz = biz)
 
