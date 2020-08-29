@@ -2,6 +2,7 @@ import sys
 import psycopg2
 import pandas as pd
 from .config import Config
+from .logging import logging
 
 class Database():
 	# postgresql class
@@ -45,8 +46,9 @@ class Database():
                 
     def select_row(self, query, parameters: list=[], **kwargs):
         self.connect()
-        
+        logging(query + str(parameters))
         records = pd.read_sql(query, self.conn, params = parameters, **kwargs)
+        logging('records length: ' + str(len(records)))
         #self.close()
         if records.empty:
             return None

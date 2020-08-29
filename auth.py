@@ -63,7 +63,7 @@ def register():
                     [hash, user_id]
                 )
                 gmail.email_verify(email_addr, hash)
-                
+                flash('이메일을 확인하시고 인증링크를 클릭해주세요')
             flash('Register Succeeded. Please Log In.')
             return redirect(url_for('auth.login'))
         
@@ -192,10 +192,10 @@ def account_info():
             ):
                 flash("이미 사용중인 이메일 입니다.")
             elif email_addr:
-                hash = generate_hash(g.user['user_id'])
                 db.update_rows(
                     "UPDATE user_acct SET email = %s WHERE user_id = %s", [email_addr, g.user['user_id']]
                 )
+                hash = generate_hash(g.user['user_id'])
                 db.update_rows(
                     "INSERT INTO email_verify (hash, user_id)"\
                     " VALUES (%s, %s)",
