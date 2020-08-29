@@ -9,6 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import db, gmail
 from .config import Config
+from .logging import logging
 
 salt = Config.SALT
 
@@ -208,12 +209,14 @@ def account_info():
         
     return render_template('auth/account.html')
     
-    
+
 @bp.route('/email_verify/<hash>', methods=('GET', 'POST'))
 def email_verify(hash):
+    logging('email_verify called' + hash)
     res = db.select_row(
         "SELECT * FROM email_verify WHERE hash = %s AND created BETWEEN now() - interval '1 day' AND now()", [hash]
     )
+    logging(str(res))
     if not res:
         s = "not_valid_link"
     else:
