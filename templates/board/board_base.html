@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block header %}
+	<h1>
+    {% block title %}
+        {% if board_list[0]['board_category'] =='buynsell' %}
+        사고팔기
+        {% elif board_list[0]['board_category'] =='buynsell' %}
+        게시판
+        {% endif %}
+    {% endblock %}
+    </h1>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <ul class="nav nav-tabs justify-content-center">
+        {% for board in board_list %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('{}.content_list'.format(board['board_category']), board_name = board['board_name']) }}">{{ board['board_alias']}}</a>
+        </li>
+        {% endfor %}
+        <li class="nav-item">
+            <a class="btn btn-info" href="{{ url_for('buynsell.write') }}">글쓰기</a>
+        </li>
+    </ul>
+{% block board_content %}
+{% endblock %}
+</div>
+{% endblock %}

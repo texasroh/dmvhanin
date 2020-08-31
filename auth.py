@@ -212,11 +212,11 @@ def account_info():
 
 @bp.route('/email_verify/<hash>', methods=('GET', 'POST'))
 def email_verify(hash):
-    logging('email_verify called' + hash)
+
     res = db.select_row(
         "SELECT * FROM email_verify WHERE hash = %s AND created BETWEEN now() - interval '1 day' AND now()", [hash]
     )
-    logging(str(res))
+
     if not res:
         s = "not_valid_link"
     else:

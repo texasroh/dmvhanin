@@ -30,17 +30,21 @@ def create_app():
     from . import buynsell
     app.register_blueprint(buynsell.bp)
     
+    from . import board
+    app.register_blueprint(board.bp)
+    
     @app.route('/test', methods=('GET','POST'))
     def test():
         print(request)
         return request
         
+    '''
     @app.route('/write', methods=('GET', 'POST'))
     def write():
         if request.method=='POST':
             return str(request.form['content'])
         return render_template('write.html')
-        
+    '''
     return app
     
 if __name__ == "__main__":
