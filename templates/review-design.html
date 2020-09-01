@@ -1,0 +1,20 @@
+{% if reviews %}
+    {% for review in reviews %}
+        <div class="row">
+        {% if review['active_flag'] %}
+            <div class="col-md-2" style="border: 1px solid black;">
+                <p><b>{{ review['user_id'] }}</b></p>
+                <p style="margin:0px;">{{ review['created'] }}</p>
+            </div>
+            <div class="col-md-10" style="border-top: 1px solid black;">
+                {{ review['comment'] }}
+                {{ time }}
+            </div>
+        {% else %}
+            <div class="col-md-12" style="border-top: 1px solid black;">
+                <p>삭제된 댓글입니다.</p>
+            </div>
+        {% endif %}
+        </div>
+    {% endfor %}
+{% endif %}

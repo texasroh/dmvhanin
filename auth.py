@@ -134,6 +134,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
+            flash('로그인이 필요한 기능입니다.')
             return redirect(url_for('auth.login'))
         return view(**kwargs)
         

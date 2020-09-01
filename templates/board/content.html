@@ -6,4 +6,8 @@
 <h5>작성일: {{ content['created'] }}</h5>
 {{ content['contents']|safe }}
 
+{% include 'review-input.html' %}
+
+{% include 'review-design.html' %}
+
 {% endblock %}
