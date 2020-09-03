@@ -83,12 +83,38 @@ def content(board_name, board_id):
         if not g.user:
             flash('로그인이 필요합니다.')
             return redirect(url_for('{}.content'.format(category), board_name=board_name, board_id=board_id))
+        ## 계층형 댓글 구현
         comment = request.form['comment']
+        sort = int(request.form['sort'])
+        depth = int(request.form['depth'])
+        
+        coalesce = int(db.select_row(
+            "SELECT COALESCE(MIN(sort), 0) FROM {}_{}_review "\
+            "WHERE board_id = %s AND sort > %s AND depth <= %s ".format(category, board_name),
+            [board_id, sort, depth]
+        )['coalesce'])
+
+        if coalesce is 0:
+            sort = int(db.select_row(
+                "SELECT COALESCE(MAX(sort), 0) + 1 AS coalesce FROM {}_{}_review "\
+                "WHERE board_id = %s".format(category, board_name),
+                [board_id]
+            )['coalesce'])
+            
+        else:
+            sort = coalesce
+            db.update_rows(
+                "UPDATE {}_{}_review SET sort = sort + 1 "\
+                "WHERE board_id = %s and sort >= %s".format(category, board_name),
+                [board_id, sort]
+            )
+            
         db.update_rows(
             "INSERT INTO {}_{}_review (board_id, comment, ip_address, user_id, sort, depth) "\
             "VALUES (%s, %s, %s, %s, %s, %s)".format(category, board_name),
-            [board_id, comment, get_client_ip(), g.user['user_id'], 1, 1]
+            [board_id, comment, get_client_ip(), g.user['user_id'], sort, depth+1]
         )
+        
         #redirect(url_for('{}.content'.format(category), board_name=board_name, board_id=board_id))
     
     content = db.select_row(
@@ -98,7 +124,7 @@ def content(board_name, board_id):
         return redirect(url_for('buynsell.board_list', board_name=board_name))
     content['created'] = content['created'].tz_convert('US/Eastern').strftime("%Y-%m-%d %H:%M")
     reviews = db.select_rows(
-        "SELECT * FROM {}_{}_review WHERE board_id = %s".format(category, board_name), [board_id]
+        "SELECT * FROM {}_{}_review WHERE board_id = %s ORDER BY sort".format(category, board_name), [board_id]
     )
     
     if reviews.empty:

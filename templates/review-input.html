@@ -1,4 +1,3 @@
-<hr>
 <form method="post">
     <div class="form-group">
         <label for="comment">댓글:</label>
@@ -6,9 +5,11 @@
             <div class="col-md-11">
                 <textarea class="form-control" id="comment" name="comment" rows=3 {% if not g.user %}disabled{% endif %}>{% if not g.user %}로그인이 필요합니다.{% endif %}</textarea>
             </div>
-            <div class="col-md-1">
-                <button type="submit" class="btn btn-primary">등록</button>
+            <div class="col-md-1 align-self-center">
+                <button type="submit" class="btn btn-primary btn-sm">등록</button>
             </div>
         </div>
     </div>
+    <input type='hidden' name="sort" value="{% if review %}{{ review['sort'] }}{% else %}0{% endif %}">
+    <input type='hidden' name="depth" value="{% if review %}{{ review['depth'] }}{% else %}0{% endif %}">
 </form>
