@@ -1,0 +1,28 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block admin_content %}
+<table class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">업소명</th>
+            <th scope="col">영문업소명</th>
+            <th scope="col">신청일</th>
+        </tr>
+    </thead>
+    {% if business_list %}
+    <tbody>
+        {% for i, business in business_list.items() %}
+        <tr>
+            <th scope="row">{{ i+1 }}</th>
+            <td>{{ business['business_name_kor'] }}</td>
+            <td>{{ business['business_name_eng'] }}</td>
+            <td>{{ business['created_date'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    {% else %}
+    <td colspan="4"><center>등록요청 없음</center></td>
+    {% endif %}
+</table>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <a href="{{ url_for('admin.business') }}">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">업소등록신청</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">등록요청리스트</h6>
+                        {% if num_business_request %}
+                        <span class="badge badge-pill badge-success">{{ num_business_request }}</span>
+                        {% else %}
+                        <span class="badge badge-pill badge-secondary">None</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

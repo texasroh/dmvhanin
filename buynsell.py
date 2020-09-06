@@ -130,7 +130,6 @@ def content(board_name, board_id):
     if reviews.empty:
         reviews = None
     else:
-        print(reviews)
         reviews['created'] = reviews['created'].dt.tz_convert('US/Eastern').apply(lambda x: x.strftime("%Y-%m-%d %H:%M"))
         reviews = reviews.to_dict('records')
     return render_template('board/content.html', board_list = board_list.to_dict('records'), content = content, reviews=reviews)

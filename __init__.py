@@ -33,6 +33,9 @@ def create_app():
     from . import board
     app.register_blueprint(board.bp)
     
+    from . import admin
+    app.register_blueprint(admin.bp)
+    
     @app.route('/test', methods=('GET','POST'))
     def test():
         print(request)

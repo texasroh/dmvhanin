@@ -48,7 +48,6 @@ class Database():
         self.connect()
 
         records = pd.read_sql(query, self.conn, params = parameters, **kwargs)
-
         #self.close()
         if records.empty:
             return None

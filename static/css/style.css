@@ -1,5 +1,5 @@
 body{
-	height: 100%
+	height:100vh;
 }
 .logo {
 	margin: 1rem;
@@ -26,7 +26,7 @@ body{
     background-color: gray;
 }
 
-.card a{
+a {
     color: black;
 }
 

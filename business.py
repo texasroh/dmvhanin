@@ -4,6 +4,7 @@ from flask import (
 from .filestream import upload_file_to_local, upload_file_to_s3
 from . import db
 from .auth import generate_hash, admin_only
+from .logging import get_client_ip
 import os
 
 bp = Blueprint('business', __name__, url_prefix='/business')
@@ -40,7 +41,7 @@ def business_list(category_id):
     return render_template('business/list.html', cat_name = cat_name, biz_list=biz_list, biz_num = len(biz_list))
     
 
-@bp.route('/<int:business_id>', methods=('GET', ))
+@bp.route('/<int:business_id>', methods=('GET', 'POST'))
 def business_detail(business_id):
     biz = db.select_row(
         "SELECT * FROM business WHERE business_id = %s",
@@ -50,7 +51,56 @@ def business_detail(business_id):
     if not biz:
         return redirect(url_for('business.index'))
         
-    return render_template('business/detail.html', biz = biz)
+    if request.method=='POST':
+        if not g.user:
+            flash('로그인이 필요합니다.')
+            return redirect(url_for('business.business_detail', business_id = business_id))
+        ##리뷰 입력작업
+        rate = request.form.get('rate', None)
+        comment = request.form['comment']
+        sort = int(request.form['sort'])
+        depth = int(request.form['depth'])
+        
+        coalesce = int(db.select_row(
+            "SELECT COALESCE(MIN(sort), 0) FROM business_review "\
+            "WHERE business_id = %s AND sort > %s AND depth <= %s ",
+            [business_id, sort, depth]
+        )['coalesce'])
+
+        if coalesce is 0:
+            sort = int(db.select_row(
+                "SELECT COALESCE(MAX(sort), 0) + 1 AS coalesce FROM business_review "\
+                "WHERE business_id = %s",
+                [business_id]
+            )['coalesce'])
+            
+        else:
+            sort = coalesce
+            db.update_rows(
+                "UPDATE business_review SET sort = sort + 1 "\
+                "WHERE business_id = %s and sort >= %s",
+                [business_id, sort]
+            )
+            
+        db.update_rows(
+            "INSERT INTO business_review (business_id, rate, comment, ip_address, user_id, sort, depth) "\
+            "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+            [business_id, rate, comment, get_client_ip(), g.user['user_id'], sort, depth+1]
+        )
+        
+    
+    reviews = db.select_rows(
+        "SELECT * FROM business_review WHERE business_id = %s ORDER BY sort",
+        [business_id]
+    )
+    if reviews.empty:
+        reviews = None
+    else:
+        reviews = reviews.fillna('')
+        reviews['created'] = reviews['created'].dt.tz_convert('US/Eastern').apply(lambda x: x.strftime("%Y-%m-%d %H:%M"))
+        reviews = reviews.to_dict('records')
+    
+    return render_template('business/detail.html', biz = biz, reviews = reviews)
 
 
 
