@@ -10,6 +10,7 @@
       <h5 class="card-title">{{biz['business_name_kor']}}</h5>
       <h6 class="card-subtitle mb-2 text-muted">{{biz['business_name_eng']}}</h6>
     </a>
+    {% if biz['avg_rate'] %}<p class="card-text"><span style="border: 1px solid black;"><b>평점:</b> {{ biz['avg_rate'] }}</span></p>{% endif %}
     <p class="card-text">{{biz['description'] if biz['description']}}</p>
     <p class="card-text">{{biz['address'] if biz['address']}}, {{biz['city'] if biz['city']}}, {{biz['state'] if biz['state']}} {{biz['zipcode'] if biz['zipcode']}}</p>
     <p class="card-text">{{biz['phone_number'] if biz['phone_number']}}</p>

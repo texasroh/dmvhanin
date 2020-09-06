@@ -32,12 +32,18 @@ def business_list(category_id):
         [category_id]
     )
     biz_list = db.select_rows(
-        'SELECT * FROM business WHERE category_id = %s ORDER BY business_name_kor collate "ko_KR.utf8"',
+        "SELECT a.*, b.avg_rate FROM business a "\
+        "LEFT JOIN "\
+        "   (SELECT business_id, AVG(rate::float) as avg_rate "\
+        "    FROM business_review WHERE rate IS NOT NULL GROUP BY business_id) b "\
+        "ON a.business_id = b.business_id "\
+        "WHERE category_id = %s "\
+        'ORDER BY -b.avg_rate, business_name_kor collate "ko_KR.utf8"',
         [category_id]
     )
     if not cat_name or biz_list.empty:
         return redirect(url_for('business.index'))
-    biz_list = biz_list.to_dict('records')
+    biz_list = biz_list.fillna('').to_dict('records')
     return render_template('business/list.html', cat_name = cat_name, biz_list=biz_list, biz_num = len(biz_list))
     
 
