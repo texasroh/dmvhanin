@@ -1,2 +1,4 @@
 __pycache__
 .env
+static/tmp/*
+static/business_uploaded_pics/*

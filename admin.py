@@ -3,6 +3,12 @@ from . import db
 
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
+@bp.before_request
+def check_admin():
+    if not g.user or not g.user['admin_flag']:
+        flash('Access Denied')
+        return redirect(url_for('index'))
+
 @bp.route('/', methods=('GET',))
 def index():
     num_business_request = db.select_row(

@@ -23,10 +23,10 @@
             <div class="form-group row">
                 <label class = "col-md-2" for = "title">제목</label>
                 <div class="col-md-10">
-                    <input class = "form-control" id= "title" name="title" type="text">
+                    <input class = "form-control" id= "title" name="title" type="text" value="{{ title }}">
                 </div>
             </div>
-            <textarea id="summernote" name="content"></textarea>
+            <textarea id="summernote" name="content">{{ content }}</textarea>
             <br>
             <button type="submit" class="btn btn-info">작성</button>
         </form>

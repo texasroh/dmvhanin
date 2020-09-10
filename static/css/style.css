@@ -3,7 +3,7 @@ body{
 }
 .logo {
 	margin: 1rem;
-	width: 15rem;
+	width: 25rem;
 }
 
 .navbar {
@@ -27,7 +27,7 @@ body{
 }
 
 a {
-    color: black;
+    //color: black;
 }
 
 .card {
