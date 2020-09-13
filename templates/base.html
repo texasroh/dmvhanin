@@ -3,7 +3,7 @@
 	<head>
         <!-- SEO 및 기타-->
         <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon-green.png') }}"/>
-        
+        {% block seo %}{% endblock %}
 		<!-- Required meta tags -->
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -31,60 +31,64 @@
             <div class="row justify-content-center">
                 <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='logo-green.png') }}" class="logo" alt="dmvhanin-logo"></a>
             </div>
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container">
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('business.index') }}">한인업소록</a>
-                            </li>
-                            {% if True %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('buynsell.index') }}">사고팔기</a>
-                            </li>
-                            {% endif %}
-                            {% if True %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('board.index') }}">게시판</a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                        
-                        <ul class="navbar-nav justify-content-end">
-                            {% if g.user %}
-                                {% if g.user['admin_flag'] %}
-                                <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.index') }}">관리자메뉴</a></li>
-                                {% endif %}
-                                <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.account_info') }}">{{ g.user['user_id'] }}</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">로그아웃</a></li>
-                            {% else %}
-                                <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}">회원가입</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">로그인</a></li>
-                            {% endif %}
-                        </ul>
-                        
-                    </div>
-                </div>
-            </nav>
-            
-            <section class="content">
-                
-                {% for message in get_flashed_messages() %}
-                <div class="container">
-                    <div class="flash alert alert-info" role="alert">{{ message }}</div>
-                </div>
-                {% endfor %}
-                {% block content %}{% endblock %}
-                
-            </section>
-
-            <footer>
-                <div></div>
-            </footer>
-            {% block recaptcha %}{% endblock %}
         </div>
+        
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('business.index') }}">한인업소록</a>
+                        </li>
+                        {% if True %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('buynsell.index') }}">사고팔기</a>
+                        </li>
+                        {% endif %}
+                        {% if True %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('board.index') }}">게시판</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    
+                    <ul class="navbar-nav justify-content-end">
+                        {% if g.user %}
+                            {% if g.user['admin_flag'] %}
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.index') }}">관리자메뉴</a></li>
+                            {% endif %}
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.account_info') }}">{{ g.user['user_id'] }}</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">로그아웃</a></li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}">회원가입</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">로그인</a></li>
+                        {% endif %}
+                    </ul>
+                    
+                </div>
+            </div>
+        </nav>
+        
+   
+        <section class="content">
+            
+            {% for message in get_flashed_messages() %}
+            <div class="container">
+                <div class="flash alert alert-info" role="alert">{{ message }}</div>
+            </div>
+            {% endfor %}
+            {% block content %}{% endblock %}
+            
+        </section>
+
+        <footer>
+            <div></div>
+        </footer>
+        {% block recaptcha %}{% endblock %}
+
+        {% block custom_javascript %}{% endblock %}
 	</body>
 </html>

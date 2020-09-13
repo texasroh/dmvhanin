@@ -64,7 +64,11 @@ def content_list(board_name):
     if board_name not in list(board_list['board_name']):
         return redirect(url_for('index'))
     content_list = db.select_rows(
-        "SELECT * FROM {}_{} ORDER BY 1 DESC".format(category, board_name)
+        "SELECT a.*, count(b.*) FROM {0}_{1} a "\
+        "LEFT JOIN {0}_{1}_review b "\
+        "ON a.board_id = b.board_id "\
+        "GROUP BY a.board_id "\
+        "ORDER BY 1 DESC".format(category, board_name)
     )
     if content_list.empty:
         content_list = None
@@ -120,15 +124,19 @@ def content(board_name, board_id):
             "VALUES (%s, %s, %s, %s, %s, %s)".format(category, board_name),
             [board_id, comment, get_client_ip(), g.user['user_id'], sort, depth+1]
         )
-        
-        #redirect(url_for('{}.content'.format(category), board_name=board_name, board_id=board_id))
+    else:
+        db.update_rows(
+            "UPDATE {}_{} SET views = views+1 WHERE board_id = %s".format(category, board_name),
+            [board_id]
+        )
+    
     
     content = db.select_row(
         "SELECT * FROM {}_{} WHERE board_id = %s".format(category, board_name), [board_id]
     )
     if not content:
         return redirect(url_for('buynsell.board_list', board_name=board_name))
-    content['created'] = content['created'].tz_convert('US/Eastern').strftime("%Y-%m-%d %H:%M")
+    content['created'] = content['created'].tz_convert('US/Eastern').strftime("%Y-%m-%d (%H:%M)")
     reviews = db.select_rows(
         "SELECT * FROM {}_{}_review WHERE board_id = %s ORDER BY sort".format(category, board_name), [board_id]
     )
@@ -137,7 +145,7 @@ def content(board_name, board_id):
         reviews = None
     else:
         print(reviews)
-        reviews['created'] = reviews['created'].dt.tz_convert('US/Eastern').apply(lambda x: x.strftime("%Y-%m-%d %H:%M"))
+        reviews['created'] = reviews['created'].dt.tz_convert('US/Eastern').apply(lambda x: x.strftime("%Y-%m-%d (%H:%M)"))
         reviews = reviews.to_dict('records')
     return render_template('board/content.html', board_list = board_list.to_dict('records'), content = content, reviews=reviews)
     

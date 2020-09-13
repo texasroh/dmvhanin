@@ -13,7 +13,7 @@
     {% if business_list %}
     <tbody>
         {% for i, business in business_list.items() %}
-        <tr>
+        <tr class="clickable-row" onclick="window.location = '{{ url_for('admin.business_request_detail', request_id = business['request_id']) }}'">
             <th scope="row">{{ i+1 }}</th>
             <td>{{ business['business_name_kor'] }}</td>
             <td>{{ business['business_name_eng'] }}</td>

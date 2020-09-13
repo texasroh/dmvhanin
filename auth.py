@@ -22,6 +22,8 @@ def generate_hash(s=''):
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
+    if g.user:
+        return redirect(url_for('index'))
     if request.method=='POST':
         user_id = request.form['user_id']
         password = request.form['password']

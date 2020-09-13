@@ -16,15 +16,22 @@ def allowed_file(filename):
         filename = ''
     return valid, filename
     
-def upload_file_to_local(file, filename):
-    valid, filename = allowed_file(filename)
+def upload_file_to_tmp_local(file, file_name):
+    valid, filename = allowed_file(file_name)
     if not valid:
         return False
+    file_name = '{}-{}'.format(datetime.now().strftime("%y%m%d%H%M%S"), file_name)
+    file_path = '/static/'+Config.TMP_DIC+'/'+file_name
+    file.save('webdocs'+file_path)
+    return file_path
     
-    image_path = os.path.join(Config.UPLOAD_FOLDER, filename)
-    file.save(image_path)
-    
-    return image_path
+def delete_local_file(filepath):
+    try:
+        os.remove(filepath)
+    except:
+        #log 남기기
+        return False
+    return True
     
 def upload_file_to_s3(file_path, folder='', bucket = 'dmvhanin'):
     if '/' in file_path:
@@ -63,25 +70,6 @@ def upload_fileobj_to_s3(file_name, file_obj, folder='', bucket='dmvhanin'):
     image_url = "https://{}.s3.amazonaws.com/{}".format(bucket,folder+file_name)
     return image_url
     
-def summernote_save_img_to_local(content):
-    bs = BeautifulSoup(content, 'html.parser')
-    imgs = bs.find_all('img')
-    for img in imgs:
-        code = img.attrs['src'].split(',')[1]
-        filename = img.attrs['data-filename']
-        valid, filename = allowed_file(filename)
-        if not valid:
-            return False
-        b = base64.b64decode(code)
-        
-        #path = url_for('static', filename=Config.TMP_DIC+'/'+filename)
-        path = '/static/'+Config.TMP_DIC+'/'+filename
-        
-        with open('webdocs'+path, 'wb') as f:
-            f.write(b)
-        img.attrs['src'] = path
-        
-    return str(bs)
     
 def summernote_save_img_to_s3(content):
     bs = BeautifulSoup(content, 'html.parser')

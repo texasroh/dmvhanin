@@ -1,11 +1,12 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app,
 )
-from .filestream import upload_file_to_local, upload_file_to_s3
+from .filestream import upload_file_to_tmp_local, upload_file_to_s3
 from . import db
 from .auth import generate_hash, admin_only
 from .logging import get_client_ip
 import os
+from bs4 import BeautifulSoup
 
 bp = Blueprint('business', __name__, url_prefix='/business')
 
@@ -43,7 +44,7 @@ def business_list(category_id):
     )
     if not cat_name or biz_list.empty:
         return redirect(url_for('business.index'))
-    biz_list = biz_list.fillna('').to_dict('records')
+    biz_list = biz_list.fillna('').to_dict('index')
     return render_template('business/list.html', cat_name = cat_name, biz_list=biz_list, biz_num = len(biz_list))
     
 
@@ -123,6 +124,8 @@ def register_request():
         zipcode = request.form['zipcode']
         homepage = request.form['homepage']
         description = request.form['description']
+        if description:
+            description = BeautifulSoup(description).text
         
         #이미지 저장
         img_list = []
@@ -132,8 +135,7 @@ def register_request():
             if file.filename == '':
                 continue
             idx += 1
-            hash=generate_hash()[:5]
-            path = upload_file_to_local(file, hash+'-'+business_name_eng+'-'+str(idx)+'-'+file.filename)
+            path = upload_file_to_tmp_local(file, business_name_eng+'-'+str(idx)+'-'+file.filename)
             if path:
                 img_list.append(path)
                 

@@ -25,6 +25,5 @@ class Config:
     
     # filestream
     ALLOWED_EXTENSIONS = {'png','jpg','jpeg'}
-    UPLOAD_FOLDER=environ.get('UPLOAD_FOLDER')
     LOG_DIC_PATH = 'logs'
     TMP_DIC = 'tmp'
