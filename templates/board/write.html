@@ -12,12 +12,16 @@
             <div class="form-group row">
                 <label for="board_selection" class="col-md-2">게시판 선택</label>
                 <div class="col-md-3">
+                    {% if modify %}
+                    <input class="form-control" readonly value="{{ board_alias }}">
+                    {% else %}
                     <select class="form-control" id="board_selection" name="board">
                         <option value=''>게시판을 선택하세요</option>
                         {% for board in board_list %}
                         <option value="{{ board['board_name'] }}">{{ board['board_alias'] }}</option>
                         {% endfor %}
                     </select>
+                    {% endif %}
                 </div>
             </div>
             <div class="form-group row">
@@ -28,7 +32,11 @@
             </div>
             <textarea id="summernote" name="content">{{ content }}</textarea>
             <br>
+            {% if modify %}
+            <button type="submit" class="btn btn-info">수정</button>
+            {% else %}
             <button type="submit" class="btn btn-info">작성</button>
+            {% endif %}
         </form>
     </div>
     <script>
