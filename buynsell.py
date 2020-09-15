@@ -1,10 +1,12 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app,
 )
-from .filestream import summernote_save_img_to_s3
+from .dmvhaninlib.filestream import summernote_save_img_to_s3
 from . import db
+from .config import Config
 from .auth import login_required
-from .logging import get_client_ip
+from .dmvhaninlib.logging import get_client_ip
+from .dmvhaninlib.paging import get_page_dict
 from bs4 import BeautifulSoup
 
 bp = Blueprint('buynsell', __name__, url_prefix='/buynsell')
@@ -136,13 +138,21 @@ def content_list(board_name):
     board_list = get_board_list()
     if board_name not in list(board_list['board_name']):
         return redirect(url_for('index'))
+        
+    curr_page = int(request.args.get('page', 1))
+    total_num = db.select_row(
+        "SELECT COUNT(*) FROM {0}_{1} WHERE active_flag=TRUE".format(category, board_name)
+    )['count']
+    last_page = (total_num - 1) // Config.NUM_CONTENTS_PER_PAGE + 1
+    page_list = get_page_dict(curr_page, last_page)
     content_list = db.select_rows(
         "SELECT a.*, count(b.*) FROM {0}_{1} a "\
         "LEFT JOIN {0}_{1}_review b "\
         "ON a.board_id = b.board_id "\
         "WHERE a.active_flag=TRUE "\
         "GROUP BY a.board_id "\
-        "ORDER BY 1 DESC".format(category, board_name)
+        "ORDER BY 1 DESC "\
+        "LIMIT {2} OFFSET {3}".format(category, board_name, Config.NUM_CONTENTS_PER_PAGE, Config.NUM_CONTENTS_PER_PAGE*(curr_page-1))
     )
     if content_list.empty:
         content_list = None
@@ -150,7 +160,7 @@ def content_list(board_name):
         content_list['created'] = content_list['created'].dt.tz_convert('US/Eastern').apply(lambda x: x.strftime("%Y-%m-%d"))
         content_list = content_list.to_dict('records')
     return render_template('board/content_list.html', board_list = board_list.to_dict('records'), content_list=content_list,
-                            category=category, board_name=board_name)
+                            category=category, board_name=board_name, curr_page = curr_page, page_list = page_list)
     
     
 @bp.route('/<board_name>/<int:board_id>', methods=('GET', 'POST'))

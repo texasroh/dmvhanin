@@ -1,5 +1,5 @@
 from flask import current_app, url_for, g
-from .config import Config
+from webdocs.config import Config
 from werkzeug.utils import secure_filename
 import os
 import io

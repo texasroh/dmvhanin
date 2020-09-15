@@ -26,6 +26,23 @@
             </a>
         </div>
         {% endfor %}
+        <br>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {% for k, v in page_list.items() %}
+                <li class="page-item {% if curr_page == v %}active{% endif %}">
+                    {% if curr_page == v %}
+                    <span class="page-link">
+                        {{ k }}
+                        <span class="sr-only">(current)</span>
+                    </span>
+                    {% else %}
+                    <a class="page-link" href="{{ url_for('{}.content_list'.format(category), board_name=board_name, page= v) }}" >{{ k }}</a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
         {% else %}
         <center><h5>게시글이 없습니다.</h5></center>
         {% endif %}

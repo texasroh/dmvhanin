@@ -27,3 +27,6 @@ class Config:
     ALLOWED_EXTENSIONS = {'png','jpg','jpeg'}
     LOG_DIC_PATH = 'logs'
     TMP_DIC = 'tmp'
+    
+    # board
+    NUM_CONTENTS_PER_PAGE = 15

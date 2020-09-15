@@ -9,7 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import db, gmail
 from .config import Config
-from .logging import logging
+from .dmvhaninlib.logging import logging
 
 salt = Config.SALT
 

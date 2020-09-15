@@ -1,5 +1,5 @@
 import os
-from .config import Config
+from webdocs.config import Config
 from datetime import datetime
 from flask import request
 

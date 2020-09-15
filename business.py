@@ -1,10 +1,10 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app,
 )
-from .filestream import upload_file_to_tmp_local, upload_file_to_s3
+from .dmvhaninlib.filestream import upload_file_to_tmp_local, upload_file_to_s3
 from . import db
 from .auth import generate_hash, admin_only
-from .logging import get_client_ip
+from .dmvhaninlib.logging import get_client_ip
 import os
 from bs4 import BeautifulSoup
 

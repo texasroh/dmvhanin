@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
-from .database import Database
-from .send_email import Gmail
+from .dmvhaninlib.database import Database
+from .dmvhaninlib.send_email import Gmail
 
 import os
 
@@ -38,8 +38,9 @@ def create_app():
     
     @app.route('/test', methods=('GET','POST'))
     def test():
-        print(request)
-        return request
+        a = request.args.get('test')
+        b = request.args.get('test2', '')
+        return render_template('test.html', a = a, b=b)
         
     '''
     @app.route('/write', methods=('GET', 'POST'))
