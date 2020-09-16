@@ -29,15 +29,22 @@
         <br>
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-                {% for k, v in page_list.items() %}
-                <li class="page-item {% if curr_page == v %}active{% endif %}">
-                    {% if curr_page == v %}
+                {% if page_list[0] > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('{}.content_list'.format(category), board_name=board_name, page=1) }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% for page in page_list %}
+                <li class="page-item {% if curr_page == page %}active{% endif %}">
+                    {% if curr_page == page %}
                     <span class="page-link">
-                        {{ k }}
+                        {{ page }}
                         <span class="sr-only">(current)</span>
                     </span>
                     {% else %}
-                    <a class="page-link" href="{{ url_for('{}.content_list'.format(category), board_name=board_name, page= v) }}" >{{ k }}</a>
+                    <a class="page-link" href="{{ url_for('{}.content_list'.format(category), board_name=board_name, page=page) }}" >{{ page }}</a>
                     {% endif %}
                 </li>
                 {% endfor %}

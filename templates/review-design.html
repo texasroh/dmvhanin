@@ -1,66 +1,55 @@
 {% if reviews %}
+    <div class="container-fluid review-container">
     {% for review in reviews %}
-        {% for i in range(1,review['depth']) %}
-        <div class="row">
-            <div class="col-md-1">
-                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-return-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M1.5 1.5A.5.5 0 0 0 1 2v4.8a2.5 2.5 0 0 0 2.5 2.5h9.793l-3.347 3.346a.5.5 0 0 0 .708.708l4.2-4.2a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 8.3H3.5A1.5 1.5 0 0 1 2 6.8V2a.5.5 0 0 0-.5-.5z"/>
-                </svg>
-            </div>
-            <div class="col-md-11">
+    <div class="row review-row">
+        {% for i in range(1, review['depth']) %}
+        <div class="col-auto">
+            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-return-right" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M1.5 1.5A.5.5 0 0 0 1 2v4.8a2.5 2.5 0 0 0 2.5 2.5h9.793l-3.347 3.346a.5.5 0 0 0 .708.708l4.2-4.2a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 8.3H3.5A1.5 1.5 0 0 1 2 6.8V2a.5.5 0 0 0-.5-.5z"/>
+            </svg>
+        </div>
         {% endfor %}
-
-        
         {% if review['active_flag'] %}
-        <div class="row" style="border-top: 1px solid black;">
-            <div class="col-md-2" style="border-right: 1px solid black;">
-                <p><b>{{ review['user_id'] }}</b></p>
-                <p style="margin:0px;">{{ review['created'] }}</p>
+        <div class="col">
+            <div class="row">
+                <p><b>{{ review['user_id'] }}</b> | {{ review['created'] }}</p>
             </div>
-            <div class="col-md-9">
-                {% if 'rate' in review and review['rate'] %}
-                    {% for i in range(review['rate']|int) %}
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-star-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.283.95l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-                    </svg>
-                    {% endfor %}
-                    {% for i in range(5-review['rate']|int) %}
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-star" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.523-3.356c.329-.314.158-.888-.283-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767l-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288l1.847-3.658 1.846 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.564.564 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
-                    </svg>
-                    {% endfor %}
-                    <br>
-                {% endif %}
-                {{ review['comment'] }}
-            </div>
-            {% if review['depth'] < 2 %}
-            <div class="col-md-1 align-self-end">
-                <button class="btn btn-sm btn-light" data-toggle="collapse" data-target="#collapse{{ review['review_id']}}" aria-expanded="false" aria-controls="collapse">답글</button>
+            {% if 'rate' in review and review['rate'] %}
+            <div class="row">
+                {% for i in range(review['rate']|int) %}
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-star-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.283.95l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                </svg>
+                {% endfor %}
+                {% for i in range(5-review['rate']|int) %}
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-star" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.523-3.356c.329-.314.158-.888-.283-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767l-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288l1.847-3.658 1.846 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.564.564 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+                </svg>
+                {% endfor %}
             </div>
             {% endif %}
+            <div class="row">
+                <p>{{ review['comment'] }}</p>
+            </div>
         </div>
         {% if review['depth'] < 2 %}
-        <div class="row collapse" id="collapse{{ review['review_id']}}">
-            <div class="col-md-2"></div>
-            <div class="col-md-10">
-                {% include 'review-input.html' %}
-            </div>
+        <div class="col-sm-1 align-self-end">
+            <button class="btn btn-sm btn-light" data-toggle="collapse" data-target="#collapse{{ review['review_id']}}" aria-expanded="false" aria-controls="collapse">답글</button>
         </div>
         {% endif %}
-        
         {% else %}
-        <div class="row" style="border-top: 1px solid black;">
-            <div class="col-md-12" style="border-top: 1px solid black;">
-                <p>삭제된 댓글입니다.</p>
-            </div>
+        <div class="col">
+            <p>삭제된 댓글입니다</p>
         </div>
         {% endif %}
-
-
-        {% for i in range(1,review['depth']) %}
-            </div>
+    </div>
+    {% if review['depth'] < 2 %}
+    <div class="row collapse" id="collapse{{ review['review_id']}}">
+        <div class="col">
+            {% include 'review-input.html' %}
         </div>
-        {% endfor %}
-
+    </div>
+    {% endif %}
     {% endfor %}
+    </div>
 {% endif %}

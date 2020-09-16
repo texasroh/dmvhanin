@@ -6,7 +6,7 @@ from . import db
 from .config import Config
 from .auth import login_required
 from .dmvhaninlib.logging import get_client_ip
-from .dmvhaninlib.paging import get_page_dict
+from .dmvhaninlib.paging import get_pagination
 from bs4 import BeautifulSoup
 
 bp = Blueprint('buynsell', __name__, url_prefix='/buynsell')
@@ -144,7 +144,7 @@ def content_list(board_name):
         "SELECT COUNT(*) FROM {0}_{1} WHERE active_flag=TRUE".format(category, board_name)
     )['count']
     last_page = (total_num - 1) // Config.NUM_CONTENTS_PER_PAGE + 1
-    page_list = get_page_dict(curr_page, last_page)
+    page_list = get_pagination(curr_page, last_page)
     content_list = db.select_rows(
         "SELECT a.*, count(b.*) FROM {0}_{1} a "\
         "LEFT JOIN {0}_{1}_review b "\

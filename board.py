@@ -6,7 +6,7 @@ from . import db
 from .config import Config
 from .auth import login_required
 from .dmvhaninlib.logging import get_client_ip
-from .dmvhaninlib.paging import get_page_dict
+from .dmvhaninlib.paging import get_pagination
 from bs4 import BeautifulSoup
 
 bp = Blueprint('board', __name__, url_prefix='/board')

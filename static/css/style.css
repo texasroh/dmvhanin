@@ -52,7 +52,7 @@ a {
 }
 
 .content-row:nth-child(odd){
-    background-color: Gainsboro;
+    background-color: #FAFAFA;
 }
 
 .content-row:hover{
@@ -61,4 +61,11 @@ a {
 
 .content-list{
     margin: 1rem 0rem;
+}
+
+.review-container{
+    border-bottom: 1px solid Gainsboro;
+}
+.review-row{
+    border-top: 1px solid Gainsboro;
 }
