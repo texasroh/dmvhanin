@@ -8,8 +8,8 @@
         <div class="content-row">
             <a href="{{ url_for('{}.content'.format(category), board_name=board_name, board_id=content['board_id']) }}">
                 <div class="row justify-content-between">
-                    <div class="col-auto">
-                        <h5>{{ content['title'] }}</h5>
+                    <div class="col-auto col-title-container">
+                        <div class="col-title">{{ content['title'] }}</div>
                         <span class="text-secondary">{{ content['user_id'] }} | {{ content['created'] }}</span>
                     </div>
                     <div class="col-auto">

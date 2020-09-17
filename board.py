@@ -144,7 +144,7 @@ def content_list(board_name):
         "SELECT COUNT(*) FROM {0}_{1} WHERE active_flag=TRUE".format(category, board_name)
     )['count']
     last_page = (total_num - 1) // Config.NUM_CONTENTS_PER_PAGE + 1
-    page_list = get_page_dict(curr_page, last_page)
+    page_list = get_pagination(curr_page, last_page)
     content_list = db.select_rows(
         "SELECT a.*, count(b.*) FROM {0}_{1} a "\
         "LEFT JOIN {0}_{1}_review b "\

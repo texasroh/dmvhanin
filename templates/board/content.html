@@ -2,7 +2,9 @@
 
 {% block board_content %}
 <div class="container">
-    <h3>{{ content['title'] }}</h3>
+    <span class="text-break text-wrap"><h5>{{ content['title'] }}</h5></span>
+
+    
     <div class="row justify-content-between">
         <div class="col-auto">
             <h6 class="text-muted">{{ content['user_id'] }} | {{ content['created'] }} | {{ content['views'] }}</h6>
@@ -26,8 +28,8 @@
         {% endif %}
     </div>
     <hr>
-    {{ content['contents']|safe }}
-
+    <span class="text-break text-wrap">{{ content['contents']|safe }}</span>
+    
     <hr>
 
     {% include 'review-input.html' %}

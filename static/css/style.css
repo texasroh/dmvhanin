@@ -1,5 +1,5 @@
 body{
-	height:100vh;
+	min-height:100vh;
 }
 .logo {
 	width: 25rem;
@@ -68,4 +68,28 @@ a {
 }
 .review-row{
     border-top: 1px solid Gainsboro;
+}
+
+.container{
+    padding: 5px;
+}
+
+.text-secondary{
+    font-size: 0.9rem;
+}
+
+
+.col-title-container{
+    max-width: 80%;
+}
+
+.col-title{
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.footer{
+    padding: 1rem;
+    background-color:#FAFAFA;
 }
