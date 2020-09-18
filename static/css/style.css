@@ -42,13 +42,14 @@ a {
     text-decoration: none;
 }
 
+.content-list{
+    margin: 1rem 0rem;
+    border-bottom: 1px solid gray;
+}
+
 .content-row{
     padding: .2rem 1rem;
     border-top: 1px solid gray;
-}
-
-.content-row:last-child{
-    border-bottom: 1px solid gray;
 }
 
 .content-row:nth-child(odd){
@@ -57,10 +58,6 @@ a {
 
 .content-row:hover{
     background-color: AliceBlue;
-}
-
-.content-list{
-    margin: 1rem 0rem;
 }
 
 .review-container{
@@ -88,4 +85,14 @@ a {
 .footer{
     padding: 1rem;
     background-color:#FAFAFA;
+}
+
+.submit-button{
+    background-color:ForestGreen;
+    color: white;
+    margin-left: .5rem;
+}
+
+.board_search_form{
+    margin-bottom: 0.5rem;
 }

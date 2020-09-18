@@ -26,6 +26,34 @@ def index():
         cat_data[cat1] = cat_list[cat_list['category1'] == cat1][['category_id', 'category2']].to_dict('records')
     return render_template('business/index.html', cat_data = cat_data)
 
+
+@bp.route('/search', methods=('GET',))
+def search():
+    biz_name = request.args.get('biz_name')
+    print(biz_name)
+    if not biz_name:
+        return redirect(url_for('business.index'))
+    
+    biz_list = db.select_rows(
+        "SELECT a.*, b.avg_rate FROM business a "\
+        "LEFT JOIN "\
+        "   (SELECT business_id, AVG(rate::float) as avg_rate "\
+        "    FROM business_review WHERE rate IS NOT NULL GROUP BY business_id) b "\
+        "ON a.business_id = b.business_id "\
+        "WHERE business_name_kor LIKE %s OR business_name_eng LIKE %s"\
+        'ORDER BY -b.avg_rate, business_name_kor collate "ko_KR.utf8"',
+        ['%'+biz_name+'%', '%'+biz_name+'%']
+    )
+    
+    if biz_list.empty:
+        biz_list = None
+        biz_count=0
+    else:
+        biz_list = biz_list.fillna('').to_dict('index')
+        biz_count = len(biz_list)
+    
+    return render_template('business/list.html', cat_name={'category1':'검색결과', 'category2':biz_name}, biz_list=biz_list, biz_count = biz_count)
+
 @bp.route('/list/<int:category_id>', methods=('GET', ))
 def business_list(category_id):
     cat_name = db.select_row(
@@ -45,7 +73,7 @@ def business_list(category_id):
     if not cat_name or biz_list.empty:
         return redirect(url_for('business.index'))
     biz_list = biz_list.fillna('').to_dict('index')
-    return render_template('business/list.html', cat_name = cat_name, biz_list=biz_list, biz_num = len(biz_list))
+    return render_template('business/list.html', cat_name = cat_name, biz_list=biz_list, biz_count = len(biz_list))
     
 
 @bp.route('/<int:business_id>', methods=('GET', 'POST'))

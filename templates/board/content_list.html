@@ -2,8 +2,19 @@
 
 {% block board_content %}
 <div class="container">
+    <!--
+    <form class="board_search_form">
+        <div class="form-row justify-content-end">
+            <div class="col-auto">
+                <input class="form-control" type="text" name="search" value={{search}}>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-sm submit-button" type="submit">검색</button>
+            </div>
+        </div>
+    </form>-->
+    {% if content_list %}
     <div class="content-list">
-        {% if content_list %}
         {% for content in content_list %}
         <div class="content-row">
             <a href="{{ url_for('{}.content'.format(category), board_name=board_name, board_id=content['board_id']) }}">
@@ -26,33 +37,33 @@
             </a>
         </div>
         {% endfor %}
-        <br>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                {% if page_list[0] > 1 %}
-                <li class="page-item">
-                    <a class="page-link" href="{{ url_for('{}.content_list'.format(category), board_name=board_name, page=1) }}" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                {% endif %}
-                {% for page in page_list %}
-                <li class="page-item {% if curr_page == page %}active{% endif %}">
-                    {% if curr_page == page %}
-                    <span class="page-link">
-                        {{ page }}
-                        <span class="sr-only">(current)</span>
-                    </span>
-                    {% else %}
-                    <a class="page-link" href="{{ url_for('{}.content_list'.format(category), board_name=board_name, page=page) }}" >{{ page }}</a>
-                    {% endif %}
-                </li>
-                {% endfor %}
-            </ul>
-        </nav>
-        {% else %}
-        <center><h5>게시글이 없습니다.</h5></center>
-        {% endif %}
     </div>
+    <br>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            {% if page_list[0] > 1 %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('{}.content_list'.format(category), board_name=board_name, page=1) }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            {% for page in page_list %}
+            <li class="page-item {% if curr_page == page %}active{% endif %}">
+                {% if curr_page == page %}
+                <span class="page-link">
+                    {{ page }}
+                    <span class="sr-only">(current)</span>
+                </span>
+                {% else %}
+                <a class="page-link" href="{{ url_for('{}.content_list'.format(category), board_name=board_name, page=page) }}" >{{ page }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% else %}
+    <center><h5>게시글이 없습니다.</h5></center>
+    {% endif %}
 </div>
 {% endblock %}

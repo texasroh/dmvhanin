@@ -6,7 +6,16 @@
 
 {% block content %}
 <div class="container">
-
+    <form action="{{ url_for('business.search') }}">
+        <div class="form-row justify-content-end">
+            <div class="col-auto">
+                <input class="form-control" type="text" name="biz_name">
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-sm submit-button" type="submit">검색</button>
+            </div>
+        </div>
+    </form>
 {% block business_content %}
 {% endblock %}
 </div>

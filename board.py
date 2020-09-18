@@ -138,6 +138,14 @@ def content_list(board_name):
     board_list = get_board_list()
     if board_name not in list(board_list['board_name']):
         return redirect(url_for('index'))
+    
+    search = request.args.get('search', '')
+    if search:
+        search_sql = "AND (a.title LIKE %s OR a.user_id LIKE %s)"
+        search_param = ['%'+search+'%','%'+search+'%']
+    else:
+        search_sql = ''
+        search_param = []
         
     curr_page = int(request.args.get('page', 1))
     total_num = db.select_row(
@@ -145,22 +153,27 @@ def content_list(board_name):
     )['count']
     last_page = (total_num - 1) // Config.NUM_CONTENTS_PER_PAGE + 1
     page_list = get_pagination(curr_page, last_page)
+    
     content_list = db.select_rows(
         "SELECT a.*, count(b.*) FROM {0}_{1} a "\
         "LEFT JOIN {0}_{1}_review b "\
         "ON a.board_id = b.board_id "\
         "WHERE a.active_flag=TRUE "\
+        "{4} "\
         "GROUP BY a.board_id "\
         "ORDER BY 1 DESC "\
-        "LIMIT {2} OFFSET {3}".format(category, board_name, Config.NUM_CONTENTS_PER_PAGE, Config.NUM_CONTENTS_PER_PAGE*(curr_page-1))
+        "LIMIT {2} OFFSET {3}"
+        .format(category, board_name, Config.NUM_CONTENTS_PER_PAGE, Config.NUM_CONTENTS_PER_PAGE*(curr_page-1), search_sql),
+        search_param
     )
+    
     if content_list.empty:
         content_list = None
     else:
         content_list['created'] = content_list['created'].dt.tz_convert('US/Eastern').apply(lambda x: x.strftime("%Y-%m-%d"))
         content_list = content_list.to_dict('records')
     return render_template('board/content_list.html', board_list = board_list.to_dict('records'), content_list=content_list,
-                            category=category, board_name=board_name, curr_page = curr_page, page_list = page_list)
+                            category=category, board_name=board_name, curr_page = curr_page, page_list = page_list, search=search)
     
     
 @bp.route('/<board_name>/<int:board_id>', methods=('GET', 'POST'))
