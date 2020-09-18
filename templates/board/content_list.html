@@ -2,7 +2,6 @@
 
 {% block board_content %}
 <div class="container">
-    <!--
     <form class="board_search_form">
         <div class="form-row justify-content-end">
             <div class="col-auto">
@@ -12,7 +11,7 @@
                 <button class="btn btn-sm submit-button" type="submit">검색</button>
             </div>
         </div>
-    </form>-->
+    </form>
     {% if content_list %}
     <div class="content-list">
         {% for content in content_list %}
@@ -43,7 +42,7 @@
         <ul class="pagination justify-content-center">
             {% if page_list[0] > 1 %}
             <li class="page-item">
-                <a class="page-link" href="{{ url_for('{}.content_list'.format(category), board_name=board_name, page=1) }}" aria-label="Previous">
+                <a class="page-link" href="{{ url_for('{}.content_list'.format(category), board_name=board_name, page=1, search=search) }}" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
@@ -56,7 +55,7 @@
                     <span class="sr-only">(current)</span>
                 </span>
                 {% else %}
-                <a class="page-link" href="{{ url_for('{}.content_list'.format(category), board_name=board_name, page=page) }}" >{{ page }}</a>
+                <a class="page-link" href="{{ url_for('{}.content_list'.format(category), board_name=board_name, page=page, search=search) }}" >{{ page }}</a>
                 {% endif %}
             </li>
             {% endfor %}

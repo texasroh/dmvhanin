@@ -149,7 +149,9 @@ def content_list(board_name):
         
     curr_page = int(request.args.get('page', 1))
     total_num = db.select_row(
-        "SELECT COUNT(*) FROM {0}_{1} WHERE active_flag=TRUE".format(category, board_name)
+        "SELECT COUNT(*) FROM {0}_{1} a WHERE active_flag=TRUE {2}"
+        .format(category, board_name, search_sql),
+        search_param
     )['count']
     last_page = (total_num - 1) // Config.NUM_CONTENTS_PER_PAGE + 1
     page_list = get_pagination(curr_page, last_page)
