@@ -19,7 +19,7 @@ def get_board_list():
     )
     return board_list
 
-@bp.route('/', methods=('GET',))
+@bp.route('/', methods=('GET','POST'))
 def index():
     board_list = get_board_list()
 
@@ -111,7 +111,7 @@ def modify(board_name, board_id):
                             title=content['title'], content=content['contents'], board_alias = board_alias, modify = True)
     
  
-@bp.route('/delete/<board_name>/<int:board_id>', methods=('GET',))
+@bp.route('/delete/<board_name>/<int:board_id>', methods=('GET','POST'))
 @login_required
 def delete(board_name, board_id):
     board_list = get_board_list()
@@ -132,7 +132,7 @@ def delete(board_name, board_id):
     return redirect(url_for('{}.content_list'.format(category), board_name=board_name))
 
 
-@bp.route('/<board_name>', methods=('GET', ))
+@bp.route('/<board_name>', methods=('GET', 'POST'))
 def content_list(board_name):
     ## url injection check
     board_list = get_board_list()

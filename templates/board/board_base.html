@@ -13,8 +13,9 @@
 {% endblock %}
 
 {% block content %}
+<br>
 <div class="container">
-    <ul class="nav nav-pills justify-content-center">
+    <ul class="nav nav-tabs justify-content-center">
         {% for board in board_list %}
         <li class="nav-item">
             <a class="nav-link {% if board_name == board['board_name'] %}active{% endif %}" href="{{ url_for('{}.content_list'.format(board['board_category']), board_name = board['board_name']) }}">{{ board['board_alias']}}</a>
@@ -24,7 +25,6 @@
             <a class="btn btn-secondary" href="{{ url_for('{}.write'.format(board_list[0]['board_category'])) }}">글쓰기</a>
         </li>
     </ul>
-    <hr>
 </div>
 
 {% block board_content %}

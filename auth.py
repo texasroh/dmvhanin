@@ -82,6 +82,8 @@ def business_acct_register():
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
+    if g.user:
+        return redirect(url_for('index'))
     if request.method == 'POST':
         user_id = request.form['user_id']
         password = request.form['password']
@@ -94,8 +96,7 @@ def login():
             error = 'Incorrect user id.'
         elif not check_password_hash(user['password'], password+salt):
             error = 'Incorrect password.'
-        
-        if error is None:
+        else:
             session.clear()
             session['user_id'] = user['user_id']
             return redirect(url_for('index'))
@@ -107,6 +108,21 @@ def login():
     
 @bp.before_app_request
 def load_logged_in_user():
+    # model login
+    if request.method=='POST' and 'user_id' in request.form and 'password' in request.form:
+        user_id = request.form['user_id']
+        password = request.form['password']
+        user = db.select_row(
+            "SELECT * FROM user_acct WHERE user_id=%s and active_flag = true", [user_id]
+        )
+        if user is None:
+            flash('Incorrect user id.')
+        elif not check_password_hash(user['password'], password+salt):
+            flash('Incorrect password.')
+        else:
+            session.clear()
+            session['user_id'] = user['user_id']
+        return redirect(request.path)
     user_id = session.get('user_id')
     if user_id is None:
         g.user = None
@@ -213,7 +229,7 @@ def account_info():
     return render_template('auth/account.html')
     
 
-@bp.route('/email_verify/<hash>', methods=('GET', 'POST'))
+@bp.route('/email_verify/<hash>', methods=('GET', ))
 def email_verify(hash):
 
     res = db.select_row(

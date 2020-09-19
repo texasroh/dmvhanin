@@ -13,7 +13,7 @@ def create_app():
         MAX_CONTENT_LENGTH=16*1024*1024,
     )
 
-    @app.route("/")
+    @app.route("/", methods=('GET', ))
     def index():
         return render_template('index.html')
         

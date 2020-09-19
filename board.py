@@ -132,7 +132,7 @@ def delete(board_name, board_id):
     return redirect(url_for('{}.content_list'.format(category), board_name=board_name))
 
 
-@bp.route('/<board_name>', methods=('GET', ))
+@bp.route('/<board_name>', methods=('GET',))
 def content_list(board_name):
     ## url injection check
     board_list = get_board_list()

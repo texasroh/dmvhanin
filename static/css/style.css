@@ -10,7 +10,22 @@ body{
 .navbar {
 	border-top: 2px solid #EAEAEA;
 	border-bottom: 2px solid #EAEAEA;
-	margin-bottom: 1rem;
+}
+
+.nav-custom-color li a{
+    color: teal;
+}
+.navbar-toggler-icon{
+    color: DarkSeaGreen;
+    border: .2rem solid DarkSeaGreen;
+    border-radius: 8px;
+    width: 50px;
+}
+
+.account-info{
+    border: .2rem solid DarkSeaGreen;
+    border-radius: 8px;
+    padding: .3rem;
 }
 
 .red {

@@ -20,11 +20,6 @@
         
         {% block summernote %}{% endblock %}
         
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script defer src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-        <script defer src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-        
 	</head>
 	<body class="d-flex flex-column">
         <div class="container-fluid">
@@ -32,25 +27,28 @@
                 <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='logo-green.png') }}" class="logo" alt="dmvhanin-logo"></a>
             </div>
         </div>
-        
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-sm nav-custom-color">
             <div class="container">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                    <span class="navbar-toggler-icon">
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                        </svg>
+                    </span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('business.index') }}">한인업소록</a>
+                            <a class="nav-link" href="{{ url_for('business.index') }}"><b>한인업소록</b></a>
                         </li>
                         {% if True %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('buynsell.index') }}">사고팔기</a>
+                            <a class="nav-link" href="{{ url_for('buynsell.index') }}"><b>사고팔기</b></a>
                         </li>
                         {% endif %}
                         {% if True %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('board.index') }}">게시판</a>
+                            <a class="nav-link" href="{{ url_for('board.index') }}"><b>게시판</b></a>
                         </li>
                         {% endif %}
                     </ul>
@@ -58,16 +56,54 @@
                     <ul class="navbar-nav justify-content-end">
                         {% if g.user %}
                             {% if g.user['admin_flag'] %}
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.index') }}">관리자메뉴</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.index') }}"><b>관리자메뉴</b></a></li>
                             {% endif %}
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.account_info') }}">{{ g.user['user_id'] }}</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">로그아웃</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.account_info') }}"><b class="account-info">{{ g.user['user_id'] }}</b></a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}"><b>로그아웃</b></a></li>
                         {% else %}
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}">회원가입</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">로그인</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}"><b>회원가입</b></a></li>
+                            <!--<li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">로그인</a></li>-->
+                            
+                            <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#loginModal"><b>로그인</b></a></li> 
+                            
+                            <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">로그인</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form method="post">
+                                            <div class="modal-body">
+                                                <div class="form-group row">
+                                                    <label class="col-sm-4 col-form-label" for="user_id">아이디</label>
+                                                    <div class="col-sm-8">
+                                                        <input class="form-control "name="user_id" id="user_id" required autofocus>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-sm-4 col-form-label" for="password">비밀번호</label>
+                                                    <div class="col-sm-8">
+                                                        <input class="form-control"type="password" name="password" id="password" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer justify-content-between">
+                                                <div class="col-auto">
+                                                    <a href="{{ url_for('auth.find_id_pwd') }}" class="btn btn-light btn-sm">아이디 / 비밀번호 찾기</a>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <input class="btn btn-success btn-sm" type="submit" value="로그인">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         {% endif %}
                     </ul>
-                    
                 </div>
             </div>
         </nav>
@@ -89,8 +125,19 @@
             	<span class="text-muted">&#169; dmvhanin.com All rights reserved.</span>
             </div>
         </footer>
+        
+        
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
         {% block recaptcha %}{% endblock %}
 
         {% block custom_javascript %}{% endblock %}
+        <script>
+            $('#loginModal').on('shown.bs.modal', function () {
+              $('#user_id').trigger('focus')
+            })
+        </script>
 	</body>
 </html>
