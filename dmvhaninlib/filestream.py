@@ -74,23 +74,25 @@ def upload_fileobj_to_s3(file_name, file_obj, folder='', bucket='dmvhanin'):
 def summernote_save_img_to_s3(content):
     bs = BeautifulSoup(content, 'html.parser')
     imgs = bs.find_all('img')
+    img_urls = []
     
     for img in imgs:
-        if ',' not in img.attrs['src'] or 'base64' not in img.attrs['src']: continue
-        code = img.attrs['src'].split(',')[1]
-        file_name = img.attrs['data-filename']
-        valid, file_name = allowed_file(file_name)
-        if not valid:
-            return False
-        else:
-            file_name = '{}-{}-{}'.format(datetime.now().strftime("%y%m%d%H%M%S"), g.user['user_id'], file_name)
-            
-        b = base64.b64decode(code)
-        with io.BytesIO(b) as f:
-            url = upload_fileobj_to_s3(file_name, f, 'board_pics')
-            
-        if not url:
-            url = ''
-        img.attrs['src'] = url
+        if ',' in img.attrs['src'] and 'base64' in img.attrs['src']:
+            code = img.attrs['src'].split(',')[1]
+            file_name = img.attrs['data-filename']
+            valid, file_name = allowed_file(file_name)
+            if not valid:
+                return False
+            else:
+                file_name = '{}-{}-{}'.format(datetime.now().strftime("%y%m%d%H%M%S"), g.user['user_id'], file_name)
+                
+            b = base64.b64decode(code)
+            with io.BytesIO(b) as f:
+                url = upload_fileobj_to_s3(file_name, f, 'board_pics')
+                
+            if not url:
+                url = ''
+            img.attrs['src'] = url
+        img_urls.append(img.attrs['src'])
         
-    return str(bs)
+    return str(bs), ';'.join(img_urls)

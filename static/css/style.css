@@ -61,6 +61,10 @@ a {
     margin: 1rem 0rem;
     border-bottom: 1px solid gray;
 }
+.content-list-img{
+    width: 50px;
+    height: 50px;
+}
 
 .content-row{
     padding: .2rem 1rem;
@@ -75,6 +79,10 @@ a {
     background-color: AliceBlue;
 }
 
+.list-row-part1:{
+    width: 90%;
+}
+
 .review-container{
     border-bottom: 1px solid Gainsboro;
 }
@@ -86,9 +94,13 @@ a {
     font-size: 0.9rem;
 }
 
+.content-row-left{
+    width: 90%;
+}
 
 .col-title-container{
     max-width: 80%;
+    margin-left: 15px;
 }
 
 .col-title{

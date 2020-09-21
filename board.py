@@ -19,7 +19,7 @@ def get_board_list():
     )
     return board_list
 
-@bp.route('/', methods=('GET',))
+@bp.route('/', methods=('GET','POST'))
 def index():
     board_list = get_board_list()
 
@@ -30,13 +30,12 @@ def index():
 @login_required
 def write():
     board_list = get_board_list()
-    title=''
-    content=''
+    
     if request.method == "POST":
         board = request.form['board']
         title = request.form['title']
         content = request.form['content']
-        content = summernote_save_img_to_s3(content)
+        content,img_urls = summernote_save_img_to_s3(content)
         
         if not content:
             flash('잘못된 이미지파일입니다')
@@ -50,8 +49,8 @@ def write():
             bs = BeautifulSoup(content, 'html.parser')
             content = str(bs).replace('<script','').replace('</script','').replace('<iframe','').replace('</iframe','')
             db.update_rows(
-                "INSERT INTO {}_{} (user_id, title, contents, ip_address) VALUES (%s, %s, %s, %s)".format(category, board),
-                [g.user['user_id'], title, content, get_client_ip()]
+                "INSERT INTO {}_{} (user_id, title, contents, ip_address, image_url) VALUES (%s, %s, %s, %s, %s)".format(category, board),
+                [g.user['user_id'], title, content, get_client_ip(), img_urls]
             )
             board_id = db.select_row(
                "SELECT LASTVAL()"
@@ -59,7 +58,7 @@ def write():
             flash('작성 완료')
             return redirect(url_for('{}.content'.format(category), board_name = board, board_id = board_id))
         
-    return render_template('board/write.html', board_list = board_list.to_dict('records'), title=title, content=content)
+    return render_template('board/write.html', board_list = board_list.to_dict('records'))
     
     
 @bp.route('/modify/<board_name>/<int:board_id>', methods=('GET','POST'))
@@ -74,13 +73,12 @@ def modify(board_name, board_id):
     if not content:
         return redirect(url_for('index'))
     elif g.user['user_id'] != content['user_id']:
-        print(g.user['user_id'], content['user_id'])
         return redirect(url_for('index'))
     
     if request.method == 'POST':
         title = request.form['title']
         content_textarea = request.form['content']
-        content_textarea = summernote_save_img_to_s3(content_textarea)
+        content_textarea, img_urls = summernote_save_img_to_s3(content_textarea)
         
         if not content_textarea:
             flash('잘못된 이미지파일입니다')
@@ -97,21 +95,18 @@ def modify(board_name, board_id):
             bs = BeautifulSoup(content_textarea, 'html.parser')
             content_textarea = str(bs).replace('<script','').replace('</script','').replace('<iframe','').replace('</iframe','')
             db.update_rows(
-                "UPDATE {}_{} SET title=%s, contents=%s, ip_address=%s WHERE board_id = %s".format(category, board_name),
-                [title, content_textarea, get_client_ip(), board_id]
+                "UPDATE {}_{} SET title=%s, contents=%s, ip_address=%s, image_url = %s WHERE board_id = %s".format(category, board_name),
+                [title, content_textarea, get_client_ip(), img_urls, board_id]
             )
             flash('수정 완료')
             return redirect(url_for('{}.content'.format(category), board_name = board_name, board_id = board_id))
-            
-            
-    
         
     board_alias = board_list.loc[board_list['board_name'] == board_name, 'board_alias'][0]
     return render_template('board/write.html', board_list = board_list.to_dict('records'),
                             title=content['title'], content=content['contents'], board_alias = board_alias, modify = True)
     
  
-@bp.route('/delete/<board_name>/<int:board_id>', methods=('GET',))
+@bp.route('/delete/<board_name>/<int:board_id>', methods=('GET','POST'))
 @login_required
 def delete(board_name, board_id):
     board_list = get_board_list()
@@ -123,7 +118,6 @@ def delete(board_name, board_id):
     if not content:
         return redirect(url_for('index'))
     elif g.user['user_id'] != content['user_id']:
-        print(g.user['user_id'], content['user_id'])
         return redirect(url_for('index'))
 
     db.update_rows(
@@ -132,7 +126,7 @@ def delete(board_name, board_id):
     return redirect(url_for('{}.content_list'.format(category), board_name=board_name))
 
 
-@bp.route('/<board_name>', methods=('GET',))
+@bp.route('/<board_name>', methods=('GET', 'POST'))
 def content_list(board_name):
     ## url injection check
     board_list = get_board_list()
@@ -168,10 +162,11 @@ def content_list(board_name):
         .format(category, board_name, Config.NUM_CONTENTS_PER_PAGE, Config.NUM_CONTENTS_PER_PAGE*(curr_page-1), search_sql),
         search_param
     )
-    
+    print(content_list)
     if content_list.empty:
         content_list = None
     else:
+        content_list['image_url'] = content_list['image_url'].apply(lambda x: x.split(';')[0] if x else None)
         content_list['created'] = content_list['created'].dt.tz_convert('US/Eastern').apply(lambda x: x.strftime("%Y-%m-%d"))
         content_list = content_list.to_dict('records')
     return render_template('board/content_list.html', board_list = board_list.to_dict('records'), content_list=content_list,
@@ -245,4 +240,3 @@ def content(board_name, board_id):
         reviews = reviews.to_dict('records')
     return render_template('board/content.html', board_list = board_list.to_dict('records'),
                             category=category, board_name=board_name, content = content, reviews=reviews)
-    
