@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 from .dmvhaninlib.database import Database
 from .dmvhaninlib.send_email import Gmail
 
@@ -20,6 +20,11 @@ def create_app():
     @app.route('/thank/<s>')
     def thank(s):
         return render_template('thank.html', s = s)
+        
+    @app.route('/robots.txt')
+    @app.route('/sitemap.xml')
+    def static_from_root():
+        return send_from_directory(app.static_folder, request.path[1:])
         
     from . import auth
     app.register_blueprint(auth.bp)

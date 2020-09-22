@@ -84,6 +84,7 @@ def business_acct_register():
 def login():
     if g.user:
         return redirect(url_for('index'))
+    
     if request.method == 'POST':
         user_id = request.form['user_id']
         password = request.form['password']
@@ -91,7 +92,7 @@ def login():
         user = db.select_row(
             "SELECT * FROM user_acct WHERE user_id=%s and active_flag = true", [user_id]
         )
-
+        print('hello2')
         if user is None:
             error = 'Incorrect user id.'
         elif not check_password_hash(user['password'], password+salt):
@@ -99,7 +100,8 @@ def login():
         else:
             session.clear()
             session['user_id'] = user['user_id']
-            return redirect(url_for('index'))
+            ret_url = request.args.get('retUrl', '/')
+            return redirect(ret_url)
         
         flash(error)
         
@@ -109,7 +111,7 @@ def login():
 @bp.before_app_request
 def load_logged_in_user():
     # model login
-    if request.method=='POST' and 'user_id' in request.form and 'password' in request.form:
+    if request.method=='POST' and 'user_id' in request.form and 'password' in request.form and 'required' not in request.form:
         user_id = request.form['user_id']
         password = request.form['password']
         user = db.select_row(
@@ -153,7 +155,7 @@ def login_required(view):
     def wrapped_view(**kwargs):
         if g.user is None:
             flash('로그인이 필요한 기능입니다.')
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.login', retUrl=request.path))
         return view(**kwargs)
         
     return wrapped_view
