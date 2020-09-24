@@ -9,6 +9,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<!-- Required meta tags area -->
 		<title>{% block title %}{% endblock %} - DMV 한인</title>
+        {% block meta %}{% endblock %}
+        <meta name="keywords" content="dmv, 디엠비, 한인, 커뮤니티, 소통, 버지니아, 매릴랜드, 디씨, virginia, maryland, d.c., 지역정보, 한인업소록, 사고팔고, 게시판">
+        
 
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -59,7 +62,7 @@
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.index') }}"><b>관리자메뉴</b></a></li>
                             {% endif %}
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.account_info') }}"><b class="account-info">{{ g.user['user_id'] }}</b></a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}"><b>로그아웃</b></a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout', retUrl = request.path) }}"><b>로그아웃</b></a></li>
                         {% else %}
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}"><b>회원가입</b></a></li>
                             <!--<li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">로그인</a></li>-->
@@ -76,6 +79,7 @@
                                             </button>
                                         </div>
                                         <form method="post">
+                                            <input type="hidden" name="modallogin">
                                             <div class="modal-body">
                                                 <div class="form-group row">
                                                     <label class="col-sm-4 col-form-label" for="user_id">아이디</label>

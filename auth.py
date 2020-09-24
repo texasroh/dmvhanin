@@ -34,7 +34,7 @@ def register():
         
         if db.select_row(
             "SELECT user_id FROM user_acct WHERE user_id = %s", [user_id]
-        ):
+        ) or user_id.lower() in Config.NOT_ALLOWED_USER_ID:
             error = '이미 사용중인 아이디입니다.'
         elif not user_id:
             error = '아이디를 입력하세요.'
@@ -111,7 +111,7 @@ def login():
 @bp.before_app_request
 def load_logged_in_user():
     # model login
-    if request.method=='POST' and 'user_id' in request.form and 'password' in request.form and 'required' not in request.form:
+    if request.method=='POST' and 'user_id' in request.form and 'password' in request.form and 'modallogin' in request.form:
         user_id = request.form['user_id']
         password = request.form['password']
         user = db.select_row(
@@ -136,7 +136,8 @@ def load_logged_in_user():
 @bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    ret_url = request.args.get('retUrl', '/')
+    return redirect(ret_url)
     
 def admin_only(view):
     @functools.wraps(view)

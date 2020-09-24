@@ -115,9 +115,7 @@ def delete(board_name, board_id):
     content = db.select_row(
         "SELECT * FROM {}_{} WHERE active_flag = TRUE AND board_id = %s".format(category,board_name), [board_id]
     )
-    if not content:
-        return redirect(url_for('index'))
-    elif g.user['user_id'] != content['user_id']:
+    if not content or (g.user['user_id'] != content['user_id'] and not g.user['admin_flag']):
         return redirect(url_for('index'))
 
     db.update_rows(
@@ -240,3 +238,20 @@ def content(board_name, board_id):
         reviews = reviews.to_dict('records')
     return render_template('board/content.html', board_list = board_list.to_dict('records'),
                             category=category, board_name=board_name, content = content, reviews=reviews)
+
+@bp.route('/review-delete/<board_name>/<int:board_id>/<int:review_id>', methods=('GET','POST'))
+@login_required
+def review_delete(board_name, board_id, review_id):
+    board_list = get_board_list()
+    if board_name not in list(board_list['board_name']):
+        return redirect(url_for('index'))
+    review = db.select_row(
+        "SELECT * FROM {}_{}_review WHERE active_flag = TRUE AND review_id = %s".format(category,board_name), [review_id]
+    )
+    if not review or (g.user['user_id'] != review['user_id'] and not g.user['admin_flag']):
+        return redirect(url_for('index'))
+
+    db.update_rows(
+        "UPDATE {}_{}_review SET active_flag=FALSE WHERE review_id = %s".format(category, board_name), [review_id]
+    )
+    return redirect(url_for('{}.content'.format(category), board_name=board_name, board_id=board_id))

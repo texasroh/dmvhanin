@@ -24,7 +24,7 @@
                             <img class="content-list-img" src="{{ content['image_url'] }}">
                         </div>
                         {% endif %}
-                        <div class="col-title-container" >
+                        <div class="col-title-container" {% if category=='buynsell' and content['image_url'] %}style="max-width:73%;"{% endif %}>
                             <div class="col-title">{{ content['title'] }}</div>
                             <span class="text-secondary">{{ content['user_id'] }} | {{ content['created'] }}</span>
                         </div>

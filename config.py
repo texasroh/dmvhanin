@@ -7,6 +7,8 @@ load_dotenv(dotenv_path)
 
 class Config:
 
+    NOT_ALLOWED_USER_ID = ['admin', 'administrator', 'representative', '관리자', '어드민', '디엠비한인', '디엠비hanin', 'dmvhanin', 'dmv한인']
+
     # Database config
     DB_HOST=environ.get('DB_HOST')
     DB_NAME=environ.get('DB_NAME')
