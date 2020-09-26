@@ -24,8 +24,15 @@ def generate_hash(s=''):
 def register():
     if g.user:
         return redirect(url_for('index'))
+        
+    user_id = ''
+    nickname = ''
+    email_addr = ''
     if request.method=='POST':
         user_id = request.form['user_id']
+        nickname = request.form['nickname']
+        if not nickname:
+            nickname = user_id
         password = request.form['password']
         confirm_password = request.form['confirm_password']
         email_addr = request.form['email']
@@ -33,9 +40,13 @@ def register():
 
         
         if db.select_row(
-            "SELECT user_id FROM user_acct WHERE user_id = %s", [user_id]
+            "SELECT user_id FROM user_acct WHERE user_id = %s OR nickname = %s", [user_id, user_id]
         ) or user_id.lower() in Config.NOT_ALLOWED_USER_ID:
             error = '이미 사용중인 아이디입니다.'
+        elif db.select_row(
+            "SELECT user_id FROM user_acct WHERE user_id = %s OR nickname = %s", [nickname, nickname]
+        ) or nickname.lower() in Config.NOT_ALLOWED_USER_ID:
+            error = '이미 사용중인 닉네임입니다.'
         elif not user_id:
             error = '아이디를 입력하세요.'
         elif len(user_id) < 4:
@@ -52,9 +63,9 @@ def register():
             
         if error is None:
             db.update_rows(
-                "INSERT INTO user_acct (user_id, password, email)"\
-                " VALUES (%s, %s, %s)",
-                [user_id, generate_password_hash(password+salt), email_addr]
+                "INSERT INTO user_acct (user_id, nickname, password, email)"\
+                " VALUES (%s, %s, %s, %s)",
+                [user_id, nickname, generate_password_hash(password+salt), email_addr]
             )
             
             if email_addr:
@@ -66,12 +77,12 @@ def register():
                 )
                 gmail.email_verify(email_addr, hash)
                 flash('이메일을 확인하시고 인증링크를 클릭해주세요')
-            flash('Register Succeeded. Please Log In.')
+            flash('회원가입 완료. 로그인하세요.')
             return redirect(url_for('auth.login'))
         
         flash(error)
         
-    return render_template('auth/register.html')
+    return render_template('auth/register.html', user_id=user_id, nickname=nickname, email_addr=email_addr)
 
 @bp.route('/business_acct_register', methods = ('GET',))
 def business_acct_register():
@@ -94,9 +105,9 @@ def login():
         )
         print('hello2')
         if user is None:
-            error = 'Incorrect user id.'
+            error = '존재하지 않는 아이디입니다.'
         elif not check_password_hash(user['password'], password+salt):
-            error = 'Incorrect password.'
+            error = '아이디나 비밀번호가 다릅니다.'
         else:
             session.clear()
             session['user_id'] = user['user_id']
@@ -191,22 +202,19 @@ def account_info():
             cur_password = request.form['cur_password']
             new_password = request.form['new_password']
             confirm_password = request.form['confirm_password']
-            print(cur_password, new_password, confirm_password)
-            error = None
             user = db.select_row(
                 "SELECT * FROM user_acct WHERE user_id=%s", [g.user['user_id']]
             )
 
             if not check_password_hash(user['password'], cur_password+salt):
-                error = 'Incorrect password.'
+                flash('비밀번호가 틀렸습니다.')
             elif new_password != confirm_password:
-                error = "Password didn't match"
-            
-            if error is None:
-                change_password(new_password, g.user['user_id'])
-                flash('Password Changed Successfully')
+                flash("비밀번호가 일치하지 않습니다.")
             else:
-                flash(error)
+                change_password(new_password, g.user['user_id'])
+                flash('패스워드 변경 완료')
+                
+
         elif type == 'email':
             email_addr = request.form['email']
             if email_addr and db.select_row(
@@ -228,6 +236,21 @@ def account_info():
                 return redirect(url_for('auth.account_info'))
             else:
                 flash("이메일을 입력하세요")
+        elif type == 'nickname':
+            nickname = request.form['nickname']
+            if nickname and (nickname.lower() not in Config.NOT_ALLOWED_USER_ID) and not db.select_row(
+                "SELECT * FROM user_acct WHERE nickname = %s OR user_id = %s", [nickname, nickname]
+            ):
+                db.update_rows(
+                    "UPDATE user_acct SET nickname = %s WHERE user_id = %s", [nickname, g.user['user_id']]
+                )
+                flash('닉네임 변경 완료')
+                return redirect(url_for('auth.account_info'))
+            elif nickname:
+                flash("이미 사용중인 닉네임 입니다.")
+            else:
+                flash('닉네임을 입력하세요.')
+                
         
     return render_template('auth/account.html')
     

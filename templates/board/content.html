@@ -6,7 +6,16 @@
 
     <div class="row justify-content-between">
         <div class="col-auto">
-            <h6 class="text-muted">{{ content['user_id'] }} | {{ content['created'] }} | {{ content['views'] }}</h6>
+            <h6 class="text-muted">{{ content['nickname'] }} | {{ content['created'] }} | {{ content['views'] }}</h6>
+            {% if g.user['admin_flag'] %}
+            <a href="{{ url_for('{}.toggle_notice'.format(category), board_name = board_name, board_id = content['board_id']) }}">
+                {% if not content['notice_flag'] %}
+                <button class="btn btn-sm btn-warning">공지설정</button>
+                {% else %}
+                <button class="btn btn-sm btn-danger">공지해제</button>
+                {% endif %}
+            </a>
+            {% endif %}
         </div>
         {% if g.user['user_id'] == content['user_id'] %}
         <div class="col-auto">

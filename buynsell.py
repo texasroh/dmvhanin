@@ -4,7 +4,7 @@ from flask import (
 from .dmvhaninlib.filestream import summernote_save_img_to_s3
 from . import db
 from .config import Config
-from .auth import login_required
+from .auth import login_required, admin_only
 from .dmvhaninlib.logging import get_client_ip
 from .dmvhaninlib.paging import get_pagination
 from bs4 import BeautifulSoup
@@ -149,18 +149,21 @@ def content_list(board_name):
     page_list = get_pagination(curr_page, last_page)
     
     content_list = db.select_rows(
-        "SELECT a.*, count(b.*) FROM {0}_{1} a "\
+        "SELECT a.*, count(b.*), c.nickname FROM {0}_{1} a "\
         "LEFT JOIN {0}_{1}_review b "\
         "ON a.board_id = b.board_id "\
+        "INNER JOIN user_acct c "\
+        "ON a.user_id = c.user_id "\
         "WHERE a.active_flag=TRUE "\
         "{4} "\
-        "GROUP BY a.board_id "\
-        "ORDER BY 1 DESC "\
+        "GROUP BY a.board_id, c.nickname "\
+        "ORDER BY notice_flag DESC, 1 DESC "\
         "LIMIT {2} OFFSET {3}"
         .format(category, board_name, Config.NUM_CONTENTS_PER_PAGE, Config.NUM_CONTENTS_PER_PAGE*(curr_page-1), search_sql),
         search_param
     )
-    print(content_list)
+    print(content_list['nickname'])
+    
     if content_list.empty:
         content_list = None
     else:
@@ -222,7 +225,10 @@ def content(board_name, board_id):
         
     
     content = db.select_row(
-        "SELECT * FROM {}_{} WHERE active_flag = TRUE AND board_id = %s".format(category, board_name), [board_id]
+        "SELECT * FROM {}_{} a "\
+        "INNER JOIN user_acct b "\
+        "ON a.user_id = b.user_id "\
+        "WHERE a.active_flag = TRUE AND a.board_id = %s".format(category, board_name), [board_id]
     )
     if not content:
         return redirect(url_for('{}.content_list'.format(category), board_name=board_name))
@@ -238,6 +244,14 @@ def content(board_name, board_id):
         reviews = reviews.to_dict('records')
     return render_template('board/content.html', board_list = board_list.to_dict('records'),
                             category=category, board_name=board_name, content = content, reviews=reviews)
+
+@bp.route('/toggle_notice/<board_name>/<int:board_id>', methods=('GET',))
+@admin_only
+def toggle_notice(board_name, board_id):
+    db.update_rows(
+        "UPDATE {}_{} SET notice_flag = NOT notice_flag WHERE board_id = %s".format(category, board_name), [board_id]
+    )
+    return redirect(url_for('{}.content'.format(category), board_name=board_name, board_id=board_id))
 
 @bp.route('/review-delete/<board_name>/<int:board_id>/<int:review_id>', methods=('GET','POST'))
 @login_required

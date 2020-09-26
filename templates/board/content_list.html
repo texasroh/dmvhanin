@@ -15,7 +15,7 @@
     {% if content_list %}
     <div class="content-list">
         {% for content in content_list %}
-        <div class="content-row">
+        <div class="content-row {% if content['notice_flag'] %}notice{% endif %}">
             <a href="{{ url_for('{}.content'.format(category), board_name=board_name, board_id=content['board_id']) }}">
                 <div class="row justify-content-between">
                     <div class="col-auto row content-row-left" >
@@ -26,7 +26,7 @@
                         {% endif %}
                         <div class="col-title-container" {% if category=='buynsell' and content['image_url'] %}style="max-width:73%;"{% endif %}>
                             <div class="col-title">{{ content['title'] }}</div>
-                            <span class="text-secondary">{{ content['user_id'] }} | {{ content['created'] }}</span>
+                            <span class="text-secondary">{{ content['nickname'] }} | {{ content['created'] }}</span>
                         </div>
                     </div>
                     <div class="col-auto">

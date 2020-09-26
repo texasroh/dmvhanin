@@ -8,28 +8,42 @@
     <form method="post" {% if business_flag %}action="{{ url_for('auth.register') }}" {% endif %}>
         <input type="hidden" name="register">
         <div class="form-group row">
-            <label class="col-sm-5 col-form-label" for="user_id">아이디 <span class="red">*</span></label>
-            <input class="form-control col-sm-7" placeholder="최소 4자" name="user_id" id="user_id" required autofocus>
+            <label class="col-sm-5 col-form-label" for="user_id">로그인아이디 <span class="red">*</span></label>
+            <div class="col-sm-7">
+                <input class="form-control" placeholder="최소 4자" name="user_id" id="user_id" value="{{ user_id }}" required autofocus>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-5 col-form-label" for="nickname">닉네임</label>
+            <div class="col-sm-7">
+                <input class="form-control" placeholder="없을시 로그인아이디" name="nickname" value="{{ nickname }}" id="nickname">
+            </div>
         </div>
         <div class="form-group row">
             <label class="col-sm-5 col-form-label" for="password">비밀번호 <span class="red">*</span></label>
-            <input class="form-control col-sm-7" type="password" name="password" id="password" required>
+            <div class="col-sm-7">
+                <input class="form-control" type="password" name="password" id="password" required>
+            </div>
         </div>
         <div class="form-group row">
             <label class="col-sm-5 col-form-label" for="confirm_password">비밀번호 확인 <span class="red">*</span></label>
-            <input class="form-control col-sm-7" type="password" name="confirm_password" id="confirm_password" required>
+            <div class="col-sm-7">
+                <input class="form-control" type="password" name="confirm_password" id="confirm_password" required>
+            </div>
         </div>
         <div class="form-group row">
             <label class="col-sm-5 col-form-label" for="confirm_password">이메일{% if business_flag %} <span class="red">*</span>{% endif %}</label>
-            <input class="form-control col-sm-7" type="email" name="email" id="email" {% if business_flag %}required{% endif %}>
+            <div class="col-sm-7">
+                <input class="form-control" type="email" name="email" id="email" value="{{ email_addr }}"{% if business_flag %}required{% endif %}>
+            </div>
         </div>
         <hr>
         <div>
              <p><span class="red">*</span> : 필수 입력사항</p>
              {% if not business_flag %}<p>이메일 등록시 메일함을 확인해주세요<br>인증시 아이디 및 비밀번호 찾기기능 가능</p>{% endif %}
         </div>
-        <div class="row">
-            <div class="col-sm-12 d-flex justify-content-end">
+        <div class="row justify-content-end">
+            <div class="col-auto">
                 <input type="submit" class="btn btn-primary" value="{% if business_flag %}비지니스 {% endif %}회원가입">
             </div>
         </div>

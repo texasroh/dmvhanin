@@ -82,6 +82,10 @@ a {
     background-color: AliceBlue;
 }
 
+.content-row.notice{
+    background-color: MintCream;
+}
+
 .review-container{
     border-bottom: 1px solid Gainsboro;
 }
