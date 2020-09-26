@@ -30,7 +30,8 @@ def index():
 @login_required
 def write():
     board_list = get_board_list()
-    
+    title=''
+    content=''
     if request.method == "POST":
         board = request.form['board']
         title = request.form['title']
@@ -58,7 +59,7 @@ def write():
             flash('작성 완료')
             return redirect(url_for('{}.content'.format(category), board_name = board, board_id = board_id))
         
-    return render_template('board/write.html', board_list = board_list.to_dict('records'))
+    return render_template('board/write.html', board_list = board_list.to_dict('records'), title=title, content=content)
     
     
 @bp.route('/modify/<board_name>/<int:board_id>', methods=('GET','POST'))
@@ -87,10 +88,10 @@ def modify(board_name, board_id):
         else:
             #히스토리 남기기
             db.update_rows(
-                "INSERT INTO {}_{} (user_id, title, contents, ip_address, image_url, active_flag, notice_flag, views, parent_id) "\
-                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) "
-                .format(category, board_name),
-                [content['user_id'], content['title'], content['contents'], content['ip_address'], content['image_url'], False, content['notice_flag'], content['views'], board_id]
+                "INSERT INTO {category}_{board_name} (user_id, title, contents, ip_address, image_url, active_flag, notice_flag, views, parent_id) "\
+                "SELECT user_id, title, contents, ip_address, image_url, FALSE, notice_flag, views, %s FROM {category}_{board_name} WHERE board_id = %s"
+                .format(category=category, board_name=board_name),
+                [board_id, board_id]
             )
             bs = BeautifulSoup(content_textarea, 'html.parser')
             content_textarea = str(bs).replace('<script','').replace('</script','').replace('<iframe','').replace('</iframe','')
