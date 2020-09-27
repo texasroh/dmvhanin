@@ -15,8 +15,16 @@
 {% block meta %}
 {% if board_list[0]['board_category'] =='buynsell' %}
 <meta name="description" content="아이용품, 가구, 전자/가전, 무료나눔, 책/악기, 의류/패션 직거래 장터.">
+<meta property="og:title" content="사고팔기 - dmv한인">
+<meta property="og:description" content="아이용품, 가구, 전자/가전, 무료나눔, 책/악기, 의류/패션 직거래 장터.">
+<meta name="twitter:title" content="사고팔기 - dmv한인">
+<meta name="twitter:description" content="아이용품, 가구, 전자/가전, 무료나눔, 책/악기, 의류/패션 직거래 장터.">
 {% elif board_list[0]['board_category'] =='board' %}
 <meta name="description" content="구인구직, 렌트, 튜터링, 홍보/프로모션, 수다방 게시판.">
+<meta property="og:title" content="게시판 - dmv한인">
+<meta property="og:description" content="구인구직, 렌트, 튜터링, 홍보/프로모션, 수다방 게시판.">
+<meta name="twitter:title" content="게시판 - dmv한인">
+<meta name="twitter:description" content="구인구직, 렌트, 튜터링, 홍보/프로모션, 수다방 게시판.">
 {% endif %}
 {% endblock %}
 

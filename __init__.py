@@ -24,6 +24,8 @@ def create_app():
     @app.route('/robots.txt')
     @app.route('/sitemap.xml')
     @app.route('/naver05419653237eae21463d879e7504a4a9.html')
+    @app.route('/logo.jpg')
+    @app.route('/icon.jpg')
     def static_from_root():
         return send_from_directory(app.static_folder, request.path[1:])
     

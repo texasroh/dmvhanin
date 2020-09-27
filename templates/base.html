@@ -2,7 +2,7 @@
 <html>
 	<head>
         <!-- SEO 및 기타-->
-        <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon-green.png') }}"/>
+        <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon.png') }}"/>
         {% block seo %}{% endblock %}
 		<!-- Required meta tags -->
 		<meta charset="utf-8">
@@ -11,8 +11,11 @@
 		<title>{% block title %}{% endblock %} - DMV 한인</title>
         {% block meta %}{% endblock %}
         <meta name="keywords" content="dmv, 디엠비, 한인, 커뮤니티, 소통, 버지니아, 매릴랜드, 디씨, virginia, maryland, d.c., 지역정보, 한인업소록, 사고팔고, 게시판">
+        <meta property="og:type" content="website">
+        <meta property="og:image" content="https://dmvhanin.com/logo.jpg">
+        <meta name="twitter:image" content="https://dmvhanin.com/logo.jpg">
+        <meta name="twitter:domain" content="dmv한인">
         
-
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
         
@@ -27,7 +30,7 @@
 	<body class="d-flex flex-column">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='logo-green.png') }}" class="logo" alt="dmvhanin-logo"></a>
+                <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="dmvhanin-logo"></a>
             </div>
         </div>
         <nav class="navbar navbar-expand-sm nav-custom-color">
