@@ -2,7 +2,6 @@ import sys
 import psycopg2
 import pandas as pd
 from webdocs.config import Config
-from webdocs.dmvhaninlib.logging import logging
 
 class Database():
 	# postgresql class

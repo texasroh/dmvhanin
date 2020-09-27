@@ -143,7 +143,9 @@ def load_logged_in_user():
         g.user = db.select_row(
             "SELECT * FROM user_acct WHERE user_id = %s and active_flag = TRUE", [user_id]
         )
-        
+    logging((g.user['user_id'] if g.user else 'NotLogin')+":"+str(request), 'all-request.log')
+
+
 @bp.route('/logout')
 def logout():
     session.clear()
