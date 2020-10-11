@@ -44,6 +44,9 @@ def create_app():
     from . import admin
     app.register_blueprint(admin.bp)
     
+    from . import estate
+    app.register_blueprint(estate.bp)
+    
     @app.route('/test', methods=('GET','POST'))
     def test():
         a = request.args.get('test')

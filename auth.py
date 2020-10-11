@@ -141,8 +141,12 @@ def load_logged_in_user():
         g.user = None
     else:
         g.user = db.select_row(
-            "SELECT * FROM user_acct WHERE user_id = %s and active_flag = TRUE", [user_id]
+            "SELECT * FROM user_acct a "\
+            "LEFT JOIN realtor b "\
+            "ON a.realtor_id = b.realtor_id "\
+            "WHERE a.user_id = %s and a.active_flag = TRUE", [user_id]
         )
+        print(g.user)
     logging((g.user['user_id'] if g.user else 'NotLogin')+":"+str(request), 'all-request.log')
 
 
@@ -240,7 +244,13 @@ def account_info():
                 flash("이메일을 입력하세요")
         elif type == 'nickname':
             nickname = request.form['nickname']
-            if nickname and (nickname.lower() not in Config.NOT_ALLOWED_USER_ID) and not db.select_row(
+            if not nickname or nickname == g.user['user_id']:
+                db.update_rows(
+                    "UPDATE user_acct SET nickname = %s WHERE user_id = %s", [g.user['user_id'], g.user['user_id']]
+                )
+                flash('닉네임 변경 완료')
+                return redirect(url_for('auth.account_info'))
+            elif (nickname.lower() not in Config.NOT_ALLOWED_USER_ID) and not db.select_row(
                 "SELECT * FROM user_acct WHERE nickname = %s OR user_id = %s", [nickname, nickname]
             ):
                 db.update_rows(

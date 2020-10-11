@@ -1,0 +1,128 @@
+{% extends 'estate/estate_base.html' %}
+
+{% block estate_content %}
+<br>
+<form method="post">
+    <div class="form-group row">
+        <label for="title" class="col-sm-2 col-form-label">제목</label>
+        <div class="col-sm-10">
+            <input type="text" name="title" id="title" class="form-control">
+        </div>
+    </div>
+    <hr>
+    <div class="form-group">
+        <label for="address">Address</label>
+        <input type="text" class="form-control" id="address" name="address">
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="city">City</label>
+            <input type="text" class="form-control" id="city" name="city">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="state">State</label>
+            <select id="state" name="state" class="form-control">
+                <option disabled selected hidden>Choose...</option>
+                <option>VA</option>
+                <option>DC</option>
+                <option>MD</option>
+            </select>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="zipcode">Zipcode</label>
+            <input type="text" class="form-control" id="zipcode" name="zipcode">
+        </div>
+    </div>
+    <hr>
+    <div class="form-group row">
+        <label for="" class="col-sm-2">거래종류</label>
+        <div class="col-sm-10">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sale_type" id="inlineRadio1" value="sale">
+                <label class="form-check-label" for="inlineRadio1">매매</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sale_type" id="inlineRadio2" value="rent">
+                <label class="form-check-label" for="inlineRadio2">렌트</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="house_type" class="col-sm-2 col-form-label">하우스타입</label>
+        <div class="col-sm-2">
+            <select id="house_type" name="house_type" id="house_type" class="form-control">
+                <option disabled selected hidden>Choose...</option>
+                <option value="SINGLE">Single House</option>
+                <option value="TOWN">Town House</option>
+                <option value="APART">Apartment</option>
+                <option value="CONDO">Condominium</option>
+                <option value="COMMERCIAL">Commercial</option>
+                <option value="Biz">Business</option>
+                <option value="ETC">기타</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="num_room" class="col-sm-2 col-form-label">방 갯수</label>
+        <div class="col-sm-1">
+            <input type="number" name="num_room" id="num_room" class="form-control" min="0">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="num_rest" class="col-sm-2 col-form-label">화장실 갯수</label>
+        <div class="col-sm-1">
+            <input type="number" name="num_rest" id="num_rest" class="form-control" min="0">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="price" class="col-sm-2 col-form-label">가격 ($)</label>
+        <div class="col-sm-3">
+            <input type="number" name="price" id="price" class="form-control" min="0">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="year" class="col-sm-2 col-form-label">시공년도 (yyyy)</label>
+        <div class="col-sm-3">
+            <input type="number" name="year" id="year" class="form-control" min="1900">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="size" class="col-sm-2 col-form-label">집 크기 (sqft)</label>
+        <div class="col-sm-3">
+            <input type="number" name="size" id="size" class="form-control" min="0">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="description">상세설명</label>
+        <textarea name="description" id="description" class="form-control" rows="5" placeholder="학군 등 기타정보"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="file1">사진첨부 (jpg, png only) 최대 8장.</label>
+        <input type="file" class="form-control-file" id="file1" name="file1">
+    </div>
+    <div class="form-group">
+        <input type="file" class="form-control-file" id="file2" name="file2">
+    </div>
+    <div class="form-group">
+        <input type="file" class="form-control-file" id="file3" name="file3">
+    </div>
+    <div class="form-group">
+        <input type="file" class="form-control-file" id="file4" name="file4">
+    </div>
+    <div class="form-group">
+        <input type="file" class="form-control-file" id="file5" name="file5">
+    </div>
+    <div class="form-group">
+        <input type="file" class="form-control-file" id="file6" name="file6">
+    </div>
+    <div class="form-group">
+        <input type="file" class="form-control-file" id="file7" name="file7">
+    </div>
+    <div class="form-group">
+        <input type="file" class="form-control-file" id="file8" name="file8">
+    </div>
+    <div class="row justify-content-center">
+        <button type="submit" class="btn btn-success col-auto">등록</button>
+    </div>
+</form>
+{% endblock %}

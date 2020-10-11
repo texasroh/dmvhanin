@@ -1,0 +1,43 @@
+{% extends 'estate/estate_base.html' %}
+
+{% block estate_content %}
+    <br>
+    <h4>부동산 리스트</h4>
+    {% if estates %}
+    <div class="estate-list">
+        {% for idx, estate in estates.items() %}
+        {% if idx % 3 == 0 %}
+        <div class="row">
+        {% endif %}
+            <div class="col-sm-4">
+                <a href="{{ url_for('estate.detail', estate_id = estate['estate_id']) }}" class="nodeco">
+                    <div class="card">
+                        {% if estate['image'] %}
+                        <img src="{{ estate['image'] }}" class="card-img-top">
+                        {% endif %}
+                        <div class="card-body">
+                            <div>
+                                {{ estate['city'] }}, {{ estate['state'] }} {{ estate['zipcode'] }}
+                            </div>
+                            <div>
+                                방 {{ estate['num_room'] }} / 화장실 {{ estate['num_rest'] }}
+                            </div>
+                            <div>
+                                {{ estate['size'] }} sqft
+                            </div>
+                            <div>
+                                $ {{ estate['price'] }}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% if idx % 3 == 2 %}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <center><h5>현재 매물이 없습니다.</h5></center>
+    {% endif %}
+{% endblock %}

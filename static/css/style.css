@@ -127,3 +127,36 @@ a {
 .board_search_form{
     margin-bottom: 0.5rem;
 }
+
+.estate-agent-head{
+    background-color: Azure;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.estate-sales-head{
+    background-color: AliceBlue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.estate-img{
+    width: 100%;
+    margin-top: 10px;
+}
+.estate-margin{
+    margin: 0px;
+}
+
+.estate-info .row{
+    border-bottom: 1px solid #EAEAEA;
+}
+.estate-info .row:last-child{
+    border: 0;
+}
+
+a.nodeco{
+    text-decoration: none;
+    color: black;
+}

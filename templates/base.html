@@ -59,14 +59,20 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('business.index') }}"><b>한인업소록</b></a>
                         </li>
-                        {% if True %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('buynsell.index') }}"><b>사고팔기</b></a>
                         </li>
-                        {% endif %}
-                        {% if True %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('board.index') }}"><b>게시판</b></a>
+                        </li>
+                        {% if False %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('house.index') }}"><b>부동산</b></a>
+                        </li>
+                        {% endif %}
+                        {% if False %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('board.index') }}"><b>자동차</b></a>
                         </li>
                         {% endif %}
                     </ul>
