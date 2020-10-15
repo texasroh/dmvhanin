@@ -65,11 +65,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('board.index') }}"><b>게시판</b></a>
                         </li>
-                        {% if False %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('house.index') }}"><b>부동산</b></a>
+                            <a class="nav-link" href="{{ url_for('estate.index') }}"><b>부동산</b></a>
                         </li>
-                        {% endif %}
                         {% if False %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('board.index') }}"><b>자동차</b></a>
@@ -87,6 +85,9 @@
                                     {{ g.user['nickname'] }}{% if g.user['nickname'] != g.user['user_id'] %} ({{ g.user['user_id'] }}){% endif %}
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    {% if g.user['realtor_id'] %}
+                                    <a class="dropdown-item" href="{{ url_for('index') }}">내 부동산관리</a>
+                                    {% endif %}
                                     <a class="dropdown-item" href="{{ url_for('auth.account_info') }}">계정설정</a>
                                     <a class="dropdown-item" href="{{ url_for('auth.logout', retUrl = request.path) }}">로그아웃</a>
                                 </div>

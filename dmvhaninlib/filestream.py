@@ -71,7 +71,7 @@ def upload_fileobj_to_s3(file_name, file_obj, folder='', bucket='dmvhanin'):
     return image_url
     
     
-def summernote_save_img_to_s3(content):
+def summernote_save_img_to_s3(content, folder='board_pics'):
     bs = BeautifulSoup(content, 'html.parser')
     imgs = bs.find_all('img')
     img_urls = []
@@ -88,7 +88,7 @@ def summernote_save_img_to_s3(content):
                 
             b = base64.b64decode(code)
             with io.BytesIO(b) as f:
-                url = upload_fileobj_to_s3(file_name, f, 'board_pics')
+                url = upload_fileobj_to_s3(file_name, f, folder)
                 
             if not url:
                 url = ''
@@ -96,3 +96,18 @@ def summernote_save_img_to_s3(content):
         img_urls.append(img.attrs['src'])
         
     return str(bs), ';'.join(img_urls)
+    
+def upload_request_file_to_s3(file, folder='estate'):
+    file_name = file.filename
+    valid, file_name = allowed_file(file_name)
+    if not valid:
+        return False
+    
+    file_name = '{}-{}-{}'.format(datetime.now().strftime("%y%m%d%H%M%S"), g.user['user_id'], file_name)
+    with io.BytesIO(file.read()) as f:
+        url = upload_fileobj_to_s3(file_name, f, folder)
+        
+    if not url:
+        url=''
+    
+    return url

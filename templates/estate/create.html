@@ -2,35 +2,35 @@
 
 {% block estate_content %}
 <br>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     <div class="form-group row">
         <label for="title" class="col-sm-2 col-form-label">제목</label>
         <div class="col-sm-10">
-            <input type="text" name="title" id="title" class="form-control">
+            <input type="text" name="title" id="title" class="form-control" {% if estate %}value="{{ estate['title'] }}"{% endif %} required>
         </div>
     </div>
     <hr>
     <div class="form-group">
         <label for="address">Address</label>
-        <input type="text" class="form-control" id="address" name="address">
+        <input type="text" class="form-control" id="address" name="address" {% if estate %}value="{{ estate['address'] }}"{% endif %} required>
     </div>
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="city">City</label>
-            <input type="text" class="form-control" id="city" name="city">
+            <input type="text" class="form-control" id="city" name="city" {% if estate %}value="{{ estate['city'] }}"{% endif %} required>
         </div>
         <div class="form-group col-md-4">
             <label for="state">State</label>
-            <select id="state" name="state" class="form-control">
+            <select id="state" name="state" class="form-control" required>
                 <option disabled selected hidden>Choose...</option>
-                <option>VA</option>
-                <option>DC</option>
-                <option>MD</option>
+                <option {% if estate and estate['state'] == 'VA' %}selected{% endif %}>VA</option>
+                <option {% if estate and estate['state'] == 'DC' %}selected{% endif %}>DC</option>
+                <option {% if estate and estate['state'] == 'MD' %}selected{% endif %}>MD</option>
             </select>
         </div>
         <div class="form-group col-md-2">
             <label for="zipcode">Zipcode</label>
-            <input type="text" class="form-control" id="zipcode" name="zipcode">
+            <input type="text" class="form-control" id="zipcode" name="zipcode" {% if estate %}value="{{ estate['zipcode'] }}"{% endif %} required>
         </div>
     </div>
     <hr>
@@ -38,11 +38,11 @@
         <label for="" class="col-sm-2">거래종류</label>
         <div class="col-sm-10">
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="sale_type" id="inlineRadio1" value="sale">
+                <input class="form-check-input" type="radio" name="sale_type" id="inlineRadio1" value="SALE" {% if estate and estate['sale_type'] == 'SALE' %}checked{% endif %} required>
                 <label class="form-check-label" for="inlineRadio1">매매</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="sale_type" id="inlineRadio2" value="rent">
+                <input class="form-check-input" type="radio" name="sale_type" id="inlineRadio2" value="RENT" {% if estate and estate['sale_type'] == 'RENT' %}checked{% endif %}>
                 <label class="form-check-label" for="inlineRadio2">렌트</label>
             </div>
         </div>
@@ -50,79 +50,117 @@
     <div class="form-group row">
         <label for="house_type" class="col-sm-2 col-form-label">하우스타입</label>
         <div class="col-sm-2">
-            <select id="house_type" name="house_type" id="house_type" class="form-control">
+            <select id="house_type" name="house_type" id="house_type" class="form-control" required>
                 <option disabled selected hidden>Choose...</option>
-                <option value="SINGLE">Single House</option>
-                <option value="TOWN">Town House</option>
-                <option value="APART">Apartment</option>
-                <option value="CONDO">Condominium</option>
-                <option value="COMMERCIAL">Commercial</option>
-                <option value="Biz">Business</option>
-                <option value="ETC">기타</option>
+                <option value="SINGLE" {% if estate and estate['house_type'] == 'SINGLE' %}selected{% endif %}>Single House</option>
+                <option value="TOWN" {% if estate and estate['house_type'] == 'TOWN' %}selected{% endif %}>Town House</option>
+                <option value="APART" {% if estate and estate['house_type'] == 'APART' %}selected{% endif %}>Apartment</option>
+                <option value="CONDO" {% if estate and estate['house_type'] == 'CONDO' %}selected{% endif %}>Condominium</option>
+                <option value="COMMERCIAL" {% if estate and estate['house_type'] == 'COMMERCIAL' %}selected{% endif %}>Commercial</option>
+                <option value="BIZ" {% if estate and estate['house_type'] == 'BIZ' %}selected{% endif %}>Business</option>
+                <option value="ETC" {% if estate and estate['house_type'] == 'ETC' %}selected{% endif %}>기타</option>
             </select>
         </div>
     </div>
     <div class="form-group row">
         <label for="num_room" class="col-sm-2 col-form-label">방 갯수</label>
         <div class="col-sm-1">
-            <input type="number" name="num_room" id="num_room" class="form-control" min="0">
+            <input type="number" name="num_room" id="num_room" class="form-control" min="0" {% if estate %}value="{{ estate['num_room'] }}"{% endif %} required>
         </div>
     </div>
     <div class="form-group row">
         <label for="num_rest" class="col-sm-2 col-form-label">화장실 갯수</label>
         <div class="col-sm-1">
-            <input type="number" name="num_rest" id="num_rest" class="form-control" min="0">
+            <input type="number" name="num_rest" id="num_rest" class="form-control" min="0" {% if estate %}value="{{ estate['num_rest'] }}"{% endif %} required>
         </div>
     </div>
     <div class="form-group row">
         <label for="price" class="col-sm-2 col-form-label">가격 ($)</label>
         <div class="col-sm-3">
-            <input type="number" name="price" id="price" class="form-control" min="0">
+            <input type="number" name="price" id="price" class="form-control" min="0" {% if estate %}value="{{ estate['price'] }}"{% endif %} required>
         </div>
     </div>
     <div class="form-group row">
         <label for="year" class="col-sm-2 col-form-label">시공년도 (yyyy)</label>
         <div class="col-sm-3">
-            <input type="number" name="year" id="year" class="form-control" min="1900">
+            <input type="number" name="year" id="year" class="form-control" min="1900" {% if estate %}value="{{ estate['year'] }}"{% endif %} required>
         </div>
     </div>
     <div class="form-group row">
         <label for="size" class="col-sm-2 col-form-label">집 크기 (sqft)</label>
         <div class="col-sm-3">
-            <input type="number" name="size" id="size" class="form-control" min="0">
+            <input type="number" name="size" id="size" class="form-control" min="0" {% if estate %}value="{{ estate['size'] }}"{% endif %} required>
         </div>
     </div>
     <div class="form-group">
         <label for="description">상세설명</label>
-        <textarea name="description" id="description" class="form-control" rows="5" placeholder="학군 등 기타정보"></textarea>
+        <textarea name="description" id="description" class="form-control" rows="5" placeholder="학군 등 기타정보">{% if estate %}{{ estate['description'] }}{% endif %}</textarea>
+    </div>
+    <label for="file1">사진첨부 (jpg, png only) 최대 8장.</label>
+    {% if estate %}
+    {% for idx, image in estate['image'] %}
+    <div class="form-group">
+        {% if image %}
+        <div id="imagecontainer{{idx}}">
+            <img src="{{ image }}"style="width:10rem;">
+            <a class="btn btn-lg" href="#collapsefile{{idx}}" data-toggle="collapse" aria-expanded="false" aria-controls="collapsefile{{idx}}" onclick="removeimg({{idx}})">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                </svg>
+            </a>
+        </div>
+        <div class="collapse" id="collapsefile{{idx}}">
+            <input type="file" class="form-control-file" name="file{{idx+1}}">
+        </div>
+        {% else %}
+        <input type="file" class="form-control-file" name="file{{idx+1}}">
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="form-group">
+        <input type="file" class="form-control-file" name="file1">
     </div>
     <div class="form-group">
-        <label for="file1">사진첨부 (jpg, png only) 최대 8장.</label>
-        <input type="file" class="form-control-file" id="file1" name="file1">
+        <input type="file" class="form-control-file" name="file2">
     </div>
     <div class="form-group">
-        <input type="file" class="form-control-file" id="file2" name="file2">
+        <input type="file" class="form-control-file" name="file3">
     </div>
     <div class="form-group">
-        <input type="file" class="form-control-file" id="file3" name="file3">
+        <input type="file" class="form-control-file" name="file4">
     </div>
     <div class="form-group">
-        <input type="file" class="form-control-file" id="file4" name="file4">
+        <input type="file" class="form-control-file" name="file5">
     </div>
     <div class="form-group">
-        <input type="file" class="form-control-file" id="file5" name="file5">
+        <input type="file" class="form-control-file" name="file6">
     </div>
     <div class="form-group">
-        <input type="file" class="form-control-file" id="file6" name="file6">
+        <input type="file" class="form-control-file" name="file7">
     </div>
     <div class="form-group">
-        <input type="file" class="form-control-file" id="file7" name="file7">
+        <input type="file" class="form-control-file" name="file8">
     </div>
-    <div class="form-group">
-        <input type="file" class="form-control-file" id="file8" name="file8">
-    </div>
+    {% endif %}
     <div class="row justify-content-center">
-        <button type="submit" class="btn btn-success col-auto">등록</button>
+        <button type="submit" class="btn btn-success col-auto">
+            {% if estate %}
+            수정
+            {% else %}
+            등록
+            {% endif %}
+        </button>
     </div>
 </form>
+{% endblock %}
+
+{% block custom_javascript %}
+<script>
+    function removeimg(idx){
+        var imgobj = document.getElementById("imagecontainer"+idx);
+        imgobj.remove();
+        
+    }
+</script>
 {% endblock %}

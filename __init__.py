@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, send_from_directory
 from .dmvhaninlib.database import Database
 from .dmvhaninlib.send_email import Gmail
+from .dmvhaninlib.filestream import upload_request_file_to_s3
 
 import os
 
@@ -49,9 +50,14 @@ def create_app():
     
     @app.route('/test', methods=('GET','POST'))
     def test():
-        a = request.args.get('test')
-        b = request.args.get('test2', '')
-        return render_template('test.html', a = a, b=b)
+        if request.method=='POST':
+            file1 = request.files['file1']
+            print(file1)
+            if not file1:
+                print(True)
+            #upload_request_file_to_s3(file1)
+            
+        return render_template('test.html')
         
     '''
     @app.route('/write', methods=('GET', 'POST'))
