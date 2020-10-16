@@ -30,7 +30,30 @@ def index():
         estates = estates.to_dict('index')
         
     return render_template('estate/index.html', estates = estates)
+
+@bp.route('/mylist', methods=('GET', ))
+@login_required
+def mylist():
+    if not g.user['realtor_id']:
+        return redirect(url_for('estate.index'))
+    estates = db.select_rows(
+        "SELECT * FROM estate "\
+        "WHERE active_flag = TRUE AND realtor_id = %s "\
+        "ORDER BY on_sale DESC, estate_id", [g.user['realtor_id']]
+    )
     
+    if estates.empty:
+        estates = None
+    else:
+        estates['image'] = estates['image'].apply(get_main_img)
+        estates['num_room'] = estates['num_room'].apply(int)
+        estates['size'] = estates['size'].apply(int)
+        estates['price'] = estates['price'].apply(int)
+        estates['num_rest'] = estates['num_rest'].apply(lambda x: int(x) if x == int(x) else x)
+        estates = estates.to_dict('records')
+    
+    return render_template('estate/listview.html', estates = estates)
+
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():

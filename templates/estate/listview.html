@@ -1,0 +1,50 @@
+{% extends 'estate/estate_base.html' %}
+
+{% block estate_content %}
+<br>
+<h4>내 매물 리스트</h4>
+{% if estates %}
+<div class="content-list">
+    {% for estate in estates %}
+    <div class="content-row">
+        <a href="{{ url_for('estate.detail', estate_id = estate['estate_id']) }}">
+            <div class="row justify-content-between">
+                <div class="col-8">
+                    <div class="text-truncate">
+                        <span class="text-secondary">{{ estate['title'] }}</span>
+                    </div>
+                    <div>
+                        [{{ estate['house_type'] }}] {{ estate['city'] }}, {{ estate['state'] }} {{ estate['zipcode'] }}
+                    </div>
+                    <div>
+                        크기: {{ estate['size'] }} sqft. 방/화장실: {{ estate['num_room'] }}/{{ estate['num_rest'] }}
+                    </div>
+                </div>
+                <div class="col-auto text-right">
+                    <div>
+                        {% if estate['sale_type'] == 'SALE' %}
+                        <span class="text-primary"><b>매매</b></span>
+                        {% else %}
+                        <span class="text-info"><b>렌트</b></span>
+                        {% endif %}
+                    </div>
+                    <div>
+                        $ {{ estate['price'] }}
+                    </div>
+                    <div>
+                        {% if estate['on_sale'] %}
+                        <span class="text-success"><b>판매중</b></span>
+                        {% else %}
+                        <span class="text-danger"><b>판매완료</b></span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<center><h5>등록된 매물이 없습니다</h5></center>
+{% endif %}
+{% endblock %}

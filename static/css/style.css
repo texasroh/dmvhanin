@@ -97,22 +97,6 @@ a {
     font-size: 0.9rem;
 }
 
-.content-row-left{
-    width: 85%;
-}
-
-.col-title-container{
-    max-width: 100%;
-    margin-left: 15px;
-}
-
-.col-title{
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-
 .footer{
     padding: 1rem;
     background-color:#FAFAFA;

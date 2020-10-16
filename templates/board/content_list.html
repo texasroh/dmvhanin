@@ -18,18 +18,18 @@
         <div class="content-row {% if content['notice_flag'] %}notice{% endif %}">
             <a href="{{ url_for('{}.content'.format(category), board_name=board_name, board_id=content['board_id']) }}">
                 <div class="row justify-content-between">
-                    <div class="col-auto row content-row-left" >
+                    <div class="col-11 row">
                         {% if category=='buynsell' and content['image_url'] %}
-                        <div>
+                        <div class="col-auto">
                             <img class="content-list-img" src="{{ content['image_url'] }}">
                         </div>
                         {% endif %}
-                        <div class="col-title-container" {% if category=='buynsell' and content['image_url'] %}style="max-width:73%;"{% endif %}>
-                            <div class="col-title">{{ content['title'] }}</div>
+                        <div class="col" {% if category=='buynsell' and content['image_url'] %}style="max-width:73%;"{% endif %}>
+                            <div class="text-truncate">{{ content['title'] }}</div>
                             <span class="text-secondary">{{ content['nickname'] }} | {{ content['created'] }}</span>
                         </div>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-auto text-right">
                         <div>
                             {{ content['views'] }}
                         </div>
