@@ -1,0 +1,70 @@
+{% extends 'admin/admin_base.html' %}
+{% block admin_content %}
+<div class="row justify-content-between">
+    <h5 class="col-auto">에이젼트 관리</h5>
+    <div class="col-auto">
+        <a href="{{ url_for('admin.agent_create') }}" class="btn btn-sm btn-dark">+ 추가</a>
+    </div>
+</div>
+{% if agents %}
+<table class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">분야</th>
+            <th scope="col">이름</th>
+            <th scope="col">회사</th>
+            <th scope="col">전화번호</th>
+            <th scope="col">이메일</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% if agents %}
+        {% for idx, agent in agents.items() %}
+        <tr>
+            <td scope="row">{{ idx + 1 }}</td>
+            <td>
+            {% if agent['div'] == 'realtor' %}
+                에이젼트
+            {% elif agent['div'] == 'dealer' %}
+                딜러
+            {% endif %}
+            </td>
+            <td>{{ agent['name'] }}</td>
+            <td>{{ agent['company'] }}</td>
+            <td>{{ agent['phone'] }}</td>
+            <td>{{ agent['email'] }}</td>
+            <td>
+                <div class="row">
+                    <a href="{{ url_for('admin.agent_modify', div=agent['div'], id=agent['id']) }}" class="btn btn-sm btn-warning">수정</a>
+                    <form method="post" id="delete_form_{{ idx }}">
+                        <input type="hidden" name="div" value="{{ agent['div'] }}">
+                        <input type="hidden" name="id" value="{{ agent['id'] }}">
+                        <button class="btn btn-sm btn-danger" onclick="confirm_delete({{ idx }}, '{{ agent['name'] }}')">삭제</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    {% else %}
+        <td>에이젼트 데이터가 없습니다.</td>
+    {% endif %}
+    </tbody>
+    
+</table>
+{% else %}
+에이젼트가 없습니다.
+{% endif %}
+{% endblock %}
+
+{% block custom_javascript %}
+<script>
+    function confirm_delete(idx, name){
+        if (confirm('['+name+'] - 정말 삭제하시겠습니까?')){
+            delete_form = document.getElementById('delete_form_'+idx)
+            delete_form.submit()
+        }
+    }
+</script>
+{% endblock %}

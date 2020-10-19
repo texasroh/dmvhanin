@@ -48,6 +48,9 @@ def create_app():
     from . import estate
     app.register_blueprint(estate.bp)
     
+    from . import car
+    app.register_blueprint(car.bp)
+    
     @app.route('/test', methods=('GET','POST'))
     def test():
         if request.method=='POST':

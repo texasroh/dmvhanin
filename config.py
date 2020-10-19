@@ -32,3 +32,6 @@ class Config:
     
     # board
     NUM_CONTENTS_PER_PAGE = 15
+    
+    # auth
+    AUTH_KEY=environ.get('AUTH_KEY')

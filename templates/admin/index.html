@@ -4,7 +4,7 @@
 <br>
 <div class="container">
     <div class="row">
-        <div class="col">
+        <div class="col-sm-6">
             <a href="{{ url_for('admin.business_request_list') }}">
                 <div class="card">
                     <div class="card-body">
@@ -15,6 +15,16 @@
                         {% else %}
                         <span class="badge badge-pill badge-secondary">None</span>
                         {% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-sm-6">
+            <a href="{{ url_for('admin.agent_manage') }}">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">에이전트 관리</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">등록, 삭제</h6>
                     </div>
                 </div>
             </a>

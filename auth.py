@@ -10,6 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from . import db, gmail
 from .config import Config
 from .dmvhaninlib.logging import logging
+from .dmvhaninlib.encrypt import register_decode
 
 salt = Config.SALT
 
@@ -24,7 +25,16 @@ def generate_hash(s=''):
 def register():
     if g.user:
         return redirect(url_for('index'))
-        
+    code = request.args.get('code', '')
+    if code:
+        try:
+            agent = register_decode(str(code))
+        except:
+            logging('code injection tried', 'all-request.log')
+            flash('Something got error')
+            return redirect(url_for('index'))
+    else:
+        agent=None
     user_id = ''
     nickname = ''
     email_addr = ''
@@ -59,20 +69,28 @@ def register():
             "SELECT user_id FROM user_acct WHERE email = %s", [email_addr]
         ):
             error = '이미 사용중인 이메일입니다.'
-        
             
         if error is None:
-            db.update_rows(
-                "INSERT INTO user_acct (user_id, nickname, password, email)"\
-                " VALUES (%s, %s, %s, %s)",
-                [user_id, nickname, generate_password_hash(password+salt), email_addr]
-            )
+            code = request.args.get('code', '')
+            # 부동산업자나 자동차딜러용 회원가입
+            if agent:
+                db.update_rows(
+                    "INSERT INTO user_acct (user_id, nickname, password, email, {}_id) "\
+                    "VALUES (%S, %S, %S, %S, %S".format(agent['type']),
+                    [user_id, nickname, generate_password_hash(password+salt), email_addr, agent['id']]
+                )
+            else:
+                db.update_rows(
+                    "INSERT INTO user_acct (user_id, nickname, password, email) "\
+                    "VALUES (%s, %s, %s, %s)",
+                    [user_id, nickname, generate_password_hash(password+salt), email_addr]
+                )
             
             if email_addr:
                 hash = generate_hash(user_id)
                 db.update_rows(
-                    "INSERT INTO email_verify (hash, user_id)"\
-                    " VALUES (%s, %s)",
+                    "INSERT INTO email_verify (hash, user_id) "\
+                    "VALUES (%s, %s)",
                     [hash, user_id]
                 )
                 gmail.email_verify(email_addr, hash)
@@ -82,7 +100,7 @@ def register():
         
         flash(error)
         
-    return render_template('auth/register.html', user_id=user_id, nickname=nickname, email_addr=email_addr)
+    return render_template('auth/register.html', user_id=user_id, nickname=nickname, email_addr=email_addr, agent=agent)
 
 @bp.route('/business_acct_register', methods = ('GET',))
 def business_acct_register():
@@ -144,6 +162,10 @@ def load_logged_in_user():
             "SELECT * FROM user_acct a "\
             "LEFT JOIN realtor b "\
             "ON a.realtor_id = b.realtor_id "\
+            "AND b.active_flag = TRUE "\
+            "LEFT JOIN dealer c "\
+            "ON a.dealer_id = c.dealer_id "\
+            "AND c.active_flag = TRUE "\
             "WHERE a.user_id = %s and a.active_flag = TRUE", [user_id]
         )
         print(g.user)

@@ -1,0 +1,52 @@
+{% extends 'car/car_base.html' %}
+
+{% block car_content %}
+<br>
+<h4>내 매물 리스트</h4>
+{% if cars %}
+<div class="content-list">
+    {% for car in cars %}
+    <div class="content-row">
+        <a href="{{ url_for('car.detail', car_id = car['car_id']) }}">
+            <div class="row justify-content-between">
+                <div class="col-8">
+                    <div class="text-truncate">
+                        <span class="text-secondary">{{ car['title'] }}</span>
+                    </div>
+                    <div>
+                        <b>[{% if car['used'] %}중고{% else %}새차{% endif %}]</b> {{ car['manufacturer'] }} - {{ car['model'] }}
+                    </div>
+                    <div>
+                        {{ car['year'] }}년식. 마일리지: {{ car['mileage'] }}
+                    </div>
+                </div>
+                <div class="col-auto text-right">
+                    <div>
+                        {% if car['sale_type'] == 'SALE' %}
+                        <span class="text-primary"><b>매매</b></span>
+                        {% elif car['sale_type'] == 'LEASE' %}
+                        <span class="text-info"><b>리스</b></span>
+                        {% else %}
+                        <span class="text-info"><b>렌트</b></span>
+                        {% endif %}
+                    </div>
+                    <div>
+                        $ {{ car['price'] }}
+                    </div>
+                    <div>
+                        {% if car['on_sale'] %}
+                        <span class="text-success"><b>판매중</b></span>
+                        {% else %}
+                        <span class="text-danger"><b>판매완료</b></span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<center><h5>등록된 매물이 없습니다</h5></center>
+{% endif %}
+{% endblock %}

@@ -1,7 +1,7 @@
 {% extends 'auth/auth_base.html' %}
 
 {% block header %}
-	<h1>{% block title %}{% block modal_title %}{% if business_flag %}비지니스 {% endif %}회원가입{% endblock %}{% endblock %}</h1>
+	<h1>{% block title %}{% block modal_title %}{% if business_flag %}비지니스 {% endif %}회원가입{% if agent and agent['type']=="realtor" %} - 부동산에이전트{% elif agent and agent['type']=="dealer" %} - 자동차딜러{% endif %}{% endblock %}{% endblock %}</h1>
 {% endblock %}
 
 {% block auth_content %}

@@ -1,0 +1,177 @@
+{% extends 'estate/estate_base.html' %}
+
+{% block estate_content %}
+<br>
+<center>
+    <div class="text-break text-wrap"><h4>{{ estate['title'] }}</h4></div>
+    {% if estate['realtor_id'] == g.user['realtor_id'] %}
+    {% if estate['on_sale'] %}
+    <a href="{{ url_for('estate.complete', estate_id = estate['estate_id']) }}" class="btn btn-sm btn-light">판매완료</a>
+    {% else %}
+    <a href="{{ url_for('estate.complete', estate_id = estate['estate_id']) }}" class="btn btn-sm btn-light">거래완료 취소</a>
+    {% endif %}
+    <a href="{{ url_for('estate.modify', estate_id = estate['estate_id']) }}" class="btn btn-sm btn-light">수정</a>
+    <a href="#" class="btn btn-sm btn-danger" onclick="delete_confirm()">삭제</a>
+    {% elif g.user['admin_flag'] %}
+    <a href="#" class="btn btn-sm btn-danger" onclick="delete_confirm()">삭제</a>
+    {% endif %}
+</center>
+<div class="row border border-success estate-margin">
+    <div class="col-sm-2 estate-agent-head">
+        <b>에이전트</b>
+    </div>
+    <div class="col-sm-10">
+        <div class="row justify-content-around">
+            <div class="col row">
+                <div class="col-sm-4">
+                    <b>이름</b>
+                </div>
+                <div class="col-sm-8">
+                    {{ estate['name'] }}
+                </div>
+            </div>
+            <div class="col row nomargin">
+                <div class="col-sm-4">
+                    <b>회사명</b>
+                </div>
+                <div class="col-sm-8">
+                    {{ estate['company'] }}
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-around">
+            <div class="col row">
+                <div class="col-sm-4">
+                    <b>이메일</b>
+                </div>
+                <div class="col-sm-8">
+                    {{ estate['email'] }}
+                </div>
+            </div>
+            <div class="col row">
+                <div class="col-sm-4">
+                    <b>전화번호</b>
+                </div>
+                <div class="col-sm-8">
+                    {{ estate['phone'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="row border border-primary estate-margin">
+    <div class="col-sm-2 estate-sales-head">
+        <b>매물정보</b>
+    </div>
+    <div class="col-sm-10 estate-info">
+        <div class="row">
+            <div class="col-4">
+                <b>진행상태</b>
+            </div>
+            <div class="col-8">
+                {% if estate['on_sale'] %}
+                <span class="text-success"><b>판매중</b></span>
+                {% else %}
+                <span class="text-danger"><b>거래완료</b></span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <b>타입</b>
+            </div>
+            <div class="col-8">
+                {% if estate['sale_type'] == 'SALE' %}
+                매매
+                {% else %}
+                렌트
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <b>주소</b>
+            </div>
+            <div class="col-8">
+                <div class="text-break text-wrap">{{ estate['address'] }} {{estate['city'] }},<br> {{ estate['state'] }} {{ estate['zipcode'] }}</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <b>종류</b>
+            </div>
+            <div class="col-8">
+                {{ estate['house_type'] }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <b>방 갯수</b>
+            </div>
+            <div class="col-8">
+                {{ estate['num_room'] }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <b>화장실 갯수</b>
+            </div>
+            <div class="col-8">
+                {{ estate['num_rest'] }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <b>시공년도</b>
+            </div>
+            <div class="col-8">
+                {{ estate['year'] }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <b>크기 (sqft)</b>
+            </div>
+            <div class="col-8">
+                {{ estate['size'] }} sqft
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <b>가격 ($)</b>
+            </div>
+            <div class="col-8">
+                ${{ estate['price'] }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <b>상세설명</b>
+            </div>
+            <div class="col-8">
+                <div class="text-break text-wrap">{{ estate['description'] }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% for image in estate['image'] %}
+    {% if image %}
+    <img src="{{ image }}" class="estate-img img-thumbnail" alt="Responsive image">
+    {% endif %}
+{% endfor %}
+
+
+{% endblock %}
+
+{% block custom_javascript %}
+<script>
+    function delete_confirm(){
+        if (confirm("삭제하시겠습니까?") == true){
+            window.location="{{ url_for('estate.delete', estate_id=estate['estate_id']) }}"
+        }
+    }
+</script>
+{% endblock %}

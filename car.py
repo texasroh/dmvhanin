@@ -3,7 +3,7 @@ from .auth import login_required
 from . import db
 from webdocs.dmvhaninlib.filestream import upload_request_file_to_s3
 
-bp = Blueprint('estate', __name__, url_prefix='/estate')
+bp = Blueprint('car', __name__, url_prefix='/car')
 
 
 def get_main_img(x):
@@ -12,56 +12,52 @@ def get_main_img(x):
         if img:
             return img
     return ''
-    
+
+
 @bp.route('/', methods=('GET',))
 def index():
-    estates = db.select_rows(
-        "SELECT * FROM estate a "\
-        "INNER JOIN realtor b "\
-        "ON a.realtor_id = b.realtor_id "\
+    cars = db.select_rows(
+        "SELECT * FROM car a "\
+        "INNER JOIN dealer b "\
+        "ON a.dealer_id = b.dealer_id "\
         "WHERE a.active_flag = TRUE AND b.active_flag = TRUE "\
-        "ORDER BY on_sale DESC, estate_id"
+        "ORDER BY on_sale DESC, car_id"
     )
-    if estates.empty:
-        estates = None
+    if cars.empty:
+        cars = None
     else:
-        estates['image'] = estates['image'].apply(get_main_img)
-        estates['num_room'] = estates['num_room'].apply(int)
-        estates['size'] = estates['size'].apply(int)
-        estates['price'] = estates['price'].apply(int)
-        estates['num_rest'] = estates['num_rest'].apply(lambda x: int(x) if x == int(x) else x)
-        estates = estates.to_dict('index')
+        cars['image'] = cars['image'].apply(get_main_img)
+        cars['price'] = cars['price'].apply(int)
+        cars = cars.to_dict('index')
         
-    return render_template('estate/index.html', estates = estates)
+    return render_template('car/index.html', cars = cars)
+
 
 @bp.route('/mylist', methods=('GET', ))
 @login_required
 def mylist():
-    if not g.user['realtor_id']:
-        return redirect(url_for('estate.index'))
-    estates = db.select_rows(
-        "SELECT * FROM estate "\
-        "WHERE active_flag = TRUE AND realtor_id = %s "\
-        "ORDER BY on_sale DESC, estate_id", [g.user['realtor_id']]
+    if not g.user['dealer_id']:
+        return redirect(url_for('car.index'))
+    cars = db.select_rows(
+        "SELECT * FROM car "\
+        "WHERE active_flag = TRUE AND dealer_id = %s "\
+        "ORDER BY on_sale DESC, car_id", [g.user['dealer_id']]
     )
     
-    if estates.empty:
-        estates = None
+    if cars.empty:
+        cars = None
     else:
-        estates['image'] = estates['image'].apply(get_main_img)
-        estates['num_room'] = estates['num_room'].apply(int)
-        estates['size'] = estates['size'].apply(int)
-        estates['price'] = estates['price'].apply(int)
-        estates['num_rest'] = estates['num_rest'].apply(lambda x: int(x) if x == int(x) else x)
-        estates = estates.to_dict('records')
+        cars['image'] = cars['image'].apply(get_main_img)
+        cars['price'] = cars['price'].apply(int)
+        cars = cars.to_dict('records')
     
-    return render_template('estate/listview.html', estates = estates)
+    return render_template('car/listview.html', cars = cars)
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
-    if not g.user['realtor_id']:
-        return redirect(url_for('estate.index'))
+    if not g.user['dealer_id']:
+        return redirect(url_for('car.index'))
     if request.method == 'POST':
         title = request.form['title']
         address = request.form['address']
@@ -97,17 +93,17 @@ def create():
         return redirect(url_for('estate.detail', estate_id = estate_id))
     return render_template('estate/create.html')
     
-@bp.route('/detail/<int:estate_id>', methods=('GET',))
-def detail(estate_id):
-    estate = db.select_row(
-        "SELECT * FROM estate a "\
-        "LEFT JOIN realtor b "\
-        "ON a.realtor_id = b.realtor_id "\
-        "WHERE a.active_flag = TRUE AND a.estate_id = %s",[estate_id]
+@bp.route('/detail/<int:car_id>', methods=('GET',))
+def detail(car_id):
+    car = db.select_row(
+        "SELECT * FROM car a "\
+        "LEFT JOIN dealer b "\
+        "ON a.dealer_id = b.dealer_id "\
+        "WHERE a.active_flag = TRUE AND a.dealer_id = %s",[car_id]
     )
     
-    if not estate:
-        return redirect(url_for('estate.index'))
+    if not car:
+        return redirect(url_for('car.index'))
     
     estate['num_room'] = int(estate['num_room'])
     estate['size'] = int(estate['size'])
@@ -158,7 +154,7 @@ def modify(estate_id):
             [title, description, files, address, city, state, zipcode, house_type, num_room, num_rest, year, sale_type, price, size, estate_id]
         )
 
-        return redirect(url_for('estate.detail', estate_id = estate_id))
+        return redirect(url_for('car.detail', estate_id = estate_id))
     
     estate['num_room'] = int(estate['num_room'])
     estate['size'] = int(estate['size'])
@@ -166,28 +162,28 @@ def modify(estate_id):
     estate['num_rest'] = int(estate['num_rest']) if estate['num_rest'] == int(estate['num_rest']) else estate['num_rest']
     estate['image'] = enumerate(estate['image'].split(';'))
     
-    return render_template('estate/create.html', estate=estate)
+    return render_template('car/create.html', estate=estate)
     
-@bp.route('/complete/<int:estate_id>', methods=('GET',))
-def complete(estate_id):
-    estate = db.select_row(
-        "SELECT * FROM estate WHERE active_flag = TRUE AND estate_id = %s", [estate_id]
+@bp.route('/complete/<int:car_id>', methods=('GET',))
+def complete(car_id):
+    car = db.select_row(
+        "SELECT * FROM car WHERE active_flag = TRUE AND car_id = %s", [car_id]
     )
-    if estate and (estate['realtor_id'] == g.user['realtor_id']):
+    if car and (car['dealer_id'] == g.user['dealer_id']):
         db.update_rows(
-            "UPDATE estate SET on_sale= NOT on_sale WHERE estate_id = %s", [estate_id]
+            "UPDATE car SET on_sale= NOT on_sale WHERE car_id = %s", [car_id]
         )
     
-    return redirect(url_for('estate.detail', estate_id = estate_id))    
+    return redirect(url_for('car.detail', car_id = car_id))    
         
-@bp.route('/delete/<int:estate_id>', methods=('GET',))
-def delete(estate_id):
-    estate = db.select_row(
-        "SELECT * FROM estate WHERE active_flag = TRUE AND estate_id = %s", [estate_id]
+@bp.route('/delete/<int:car_id>', methods=('GET',))
+def delete(car_id):
+    car = db.select_row(
+        "SELECT * FROM car WHERE active_flag = TRUE AND car_id = %s", [car_id]
     )
-    if estate and (estate['realtor_id'] == g.user['realtor_id'] or g.user['admin_flag']):
+    if car and (car['dealer_id'] == g.user['dealer_id'] or g.user['admin_flag']):
         db.update_rows(
-            "UPDATE estate SET active_flag=FALSE WHERE estate_id = %s", [estate_id]
+            "UPDATE car SET active_flag=FALSE WHERE car_id = %s", [car_id]
         )
     
-    return redirect(url_for('estate.index'))
+    return redirect(url_for('car.index'))

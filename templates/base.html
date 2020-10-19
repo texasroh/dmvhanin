@@ -70,7 +70,7 @@
                         </li>
                         {% if False %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('board.index') }}"><b>자동차</b></a>
+                            <a class="nav-link" href="{{ url_for('car.index') }}"><b>자동차</b></a>
                         </li>
                         {% endif %}
                     </ul>
@@ -87,6 +87,9 @@
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     {% if g.user['realtor_id'] %}
                                     <a class="dropdown-item" href="{{ url_for('estate.mylist') }}">내 부동산관리</a>
+                                    {% endif %}
+                                    {% if g.user['dealer_id'] %}
+                                    <a class="dropdown-item" href="{{ url_for('car.mylist') }}">내 자동차관리</a>
                                     {% endif %}
                                     <a class="dropdown-item" href="{{ url_for('auth.account_info') }}">계정설정</a>
                                     <a class="dropdown-item" href="{{ url_for('auth.logout', retUrl = request.path) }}">로그아웃</a>

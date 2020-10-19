@@ -32,7 +32,7 @@ def business_request_list():
     
 @bp.route('/business_req_detail/<int:request_id>', methods=('GET', 'POST'))
 def business_request_detail(request_id):
-    if request.method == "post":
+    if request.method == "POST":
         decision = request.form['decision']
         if decision == 'approve':
             category_id = request.form['category_id']
@@ -55,3 +55,69 @@ def business_request_detail(request_id):
         img_data = None
     business = {k:v if v else '-------' for k, v in business.items()}
     return render_template('admin/business_detail.html', business = business, img_data = img_data)
+    
+    
+@bp.route('/agent-manage', methods=('GET','POST'))
+def agent_manage():
+    if request.method=='POST':
+        div = request.form['div']
+        id = request.form['id']
+        db.update_rows(
+            "UPDATE {div} SET active_flag=FALSE WHERE {div}_id = %s".format(div=div),
+            [id]
+        )
+        return redirect('admin.agent_manage')
+        
+    agents = db.select_rows(
+        "SELECT 'realtor' AS div, realtor_id AS id, name, company, phone, email "\
+        "FROM realtor "\
+        "WHERE active_flag=TRUE "\
+        "UNION ALL "\
+        "SELECT 'dealer' AS div, dealer_id AS id, name, company, phone, email "\
+        "FROM dealer "
+        "WHERE active_flag=TRUE "\
+    )
+    if agents.empty:
+        agents = None
+    else:
+        agents = agents.to_dict('index')
+    return render_template('admin/agent_manage.html', agents = agents)
+    
+
+@bp.route('/agent-create', methods=('GET','POST'))
+def agent_create():
+    if request.method == 'POST':
+        name = request.form['name']
+        company = request.form['company']
+        phone = request.form['phone']
+        email = request.form['email']
+        div = request.form['div']
+        
+        db.update_rows(
+            "INSERT INTO {div} (name, company, phone, email) "\
+            "VALUES (%s, %s, %s, %s)".format(div=div), [name, company, phone, email]
+        )
+        return redirect(url_for('admin.agent_manage'))
+        
+    return render_template('admin/agent_create.html', create=True)
+    
+@bp.route('/agent-modify/<div>/<int:id>', methods=('GET','POST'))
+def agent_modify(div, id):
+    if request.method == 'POST':
+        name = request.form['name']
+        company = request.form['company']
+        phone = request.form['phone']
+        email = request.form['email']
+        div = request.form['div']
+        
+        db.update_rows(
+            "UPDATE {div} SET name=%s, company=%s, phone=%s, email=%s".format(div=div), 
+            [name, company, phone, email]
+        )
+        return redirect(url_for('admin.agent_manage'))
+        
+    agent = db.select_row(
+        "SELECT * FROM {div} WHERE {div}_id= %s".format(div=div), [id]
+    )
+        
+    return render_template('admin/agent_create.html', modify=True, agent=agent, div=div)
