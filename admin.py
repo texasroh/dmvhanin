@@ -15,7 +15,10 @@ def index():
     num_business_request = db.select_row(
         "SELECT COUNT(*) FROM business_register_request WHERE active_flag = TRUE and verified = FALSE"
     )['count']
-    return render_template('admin/index.html', num_business_request = num_business_request)
+    num_active_tip = db.select_row(
+        "SELECT COUNT(*) FROM tip WHERE active_flag = TRUE AND confirm=FALSE"
+    )['count']
+    return render_template('admin/index.html', num_business_request = num_business_request, num_active_tip = num_active_tip)
     
 @bp.route('/business_req_list', methods=('GET', ))
 def business_request_list():
@@ -76,6 +79,7 @@ def agent_manage():
         "SELECT 'dealer' AS div, dealer_id AS id, name, company, phone, email "\
         "FROM dealer "
         "WHERE active_flag=TRUE "\
+        "ORDER BY div DESC, id "\
     )
     if agents.empty:
         agents = None
@@ -111,8 +115,8 @@ def agent_modify(div, id):
         div = request.form['div']
         
         db.update_rows(
-            "UPDATE {div} SET name=%s, company=%s, phone=%s, email=%s".format(div=div), 
-            [name, company, phone, email]
+            "UPDATE {div} SET name=%s, company=%s, phone=%s, email=%s WHERE {div}_id = %s".format(div=div), 
+            [name, company, phone, email, id]
         )
         return redirect(url_for('admin.agent_manage'))
         
@@ -121,3 +125,18 @@ def agent_modify(div, id):
     )
         
     return render_template('admin/agent_create.html', modify=True, agent=agent, div=div)
+    
+    
+@bp.route('/tip', methods=('GET',))
+def tip():
+    tips = db.select_rows(
+        "SELECT * FROM tip "\
+        "WHERE active_flag = TRUE "\
+        "ORDER BY confirm DESC, tip_id"
+    )
+    if tips.empty:
+        tips = None
+    else:
+        tips = tips.to_dict('index')
+    
+    return render_template('admin/tip_list.html', tips = tips)

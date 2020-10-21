@@ -1,0 +1,49 @@
+{% extends 'admin/admin_base.html' %}
+{% block admin_content %}
+<div class="row">
+    <h5 class="col-auto">팁 관리</h5>
+</div>
+{% if tips %}
+<table class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">팁</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for idx, tip in tips.items() %}
+        <tr>
+            <td scope="row">{{ idx + 1 }}</td>
+            <td>{{ tip['tip'] }}</td>
+            <td>
+                {% if not tip['confirm'] %}
+                <div class="row">
+                    <a href="#" class="btn btn-sm btn-success">확인</a>
+                    <form method="post" id="delete_form_{{ idx }}">
+                        <button class="btn btn-sm btn-danger" onclick="confirm_delete({{ idx }})">삭제</button>
+                    </form>
+                </div>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    
+</table>
+{% else %}
+팁이 없습니다.
+{% endif %}
+{% endblock %}
+
+{% block custom_javascript %}
+<script>
+    function confirm_delete(idx){
+        if (confirm('정말 삭제하시겠습니까?')){
+            delete_form = document.getElementById('delete_form_'+idx)
+            delete_form.submit()
+        }
+    }
+</script>
+{% endblock %}

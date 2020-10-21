@@ -14,18 +14,124 @@
 
 {% block content %}
 <div class="jumbotron">
-    <div class="container">
-        <h1>당신의 비지니스를 응원합니다!</h1>
-        <p class="lead">당신의 비지니스를 여러사람에게 알려주세요</p>
+    <div class="container text-center">
+        <h2>DC, Virginia, Maryland 지역 한인 커뮤니티</h2>
+        <p class="lead">DC / MD / VA area korean community</p>
         <hr class="my-4">
-        <p>비지니스 등록시 장점</p>
-            <ul>
-                <li>여러사람이 쉽게 검색가능</li>
-                <li>최신 비지니스 정보로 업데이트 가능</li>
-                <li>프로모션, 행사등 한인들과 소통가능</li>
-                
-            </ul>
-        <a class="btn btn-sm btn-info" href="{{ url_for('business.register_request')}}" role="button">업소등록/수정 신청</a>
+        <p>깨끗하고 정직한 지역 한인사회를<br>활성화하는데 앞장서겠습니다.</p>
+    </div>
+</div>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4 main__request">
+            <center>
+                <div class="main__icon">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <h5 class="main__title"><b>비지니스 등록</b></h5>
+                <p>업소록에 무료로 등록하세요<br>검색될 수 있습니다</p>
+                <a class="btn btn-sm btn-info" href="{{ url_for('business.register_request')}}" role="button">업소등록/수정 신청</a>
+            </center>
+        </div>
+        <div class="col-sm-4 main__request">
+            <center>
+                <div class="main__icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <h5 class="main__title"><b>부동산 에이전트 등록</b></h5>
+                <p>무료로 에이전트 등록 후 <br>부동산 매물을 게시하세요</p>
+                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#agent_modal">에이전트 등록 신청</button>
+            </center>
+        </div>
+        <br><br>
+        <div class="col-sm-4 main__request">
+            <center>
+                <div class="main__icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <h5 class="main__title"><b>자동차 딜러 등록</b></h5>
+                <p>무료로 딜러 등록 후 <br>자동차 매물을 게시하세요</p>
+                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#agent_modal">딜러 등록 신청</button>
+            </center>
+        </div>
+        <div class="modal fade" id="agent_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form method="post">
+                        <input type="hidden" name="type" value="agent">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">딜러 등록 신청</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <label for="" class="col-sm-3">분야</label>
+                                <div class="col-sm-9">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="div" id="inlineRadio1" value="realtor" {% if agent and div == 'realtor' %}checked{% endif %} required>
+                                        <label class="form-check-label" for="inlineRadio1">부동산 에이전트</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="div" id="inlineRadio2" value="dealer" {% if agent and div == 'dealer' %}checked{% endif %}>
+                                        <label class="form-check-label" for="inlineRadio2">자동차 딜러</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="name" class="col-sm-3 col-form-label">이름</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="name" id="name" class="form-control" {% if agent %}value="{{ agent['name'] }}"{% endif %} required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="company" class="col-sm-3 col-form-label">회사</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="company" id="company" class="form-control" {% if agent %}value="{{ agent['company'] }}"{% endif %} required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="phone" class="col-sm-3 col-form-label">전화번호</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="phone" id="phone" class="form-control" {% if agent %}value="{{ agent['phone'] }}"{% endif %} required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="email" class="col-sm-3 col-form-label">이메일</label>
+                                <div class="col-sm-9">
+                                    <input type="email" name="email" id="name" class="form-control" {% if agent %}value="{{ agent['email'] }}"{% endif %} required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-sm btn-success">신청하기</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card text-center">
+                <div class="card-header">
+                    지역주민 추천
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">더 나은 커뮤니티를 위해</h5>
+                    <p class="card-text">관광지, 생활팁 공유<br>개선사항 / 요구사항<br>다양한 의견을 주세요<br><br>항상 발전하는 DMV한인이 되겠습니다. </p>
+                    <form method="post">
+                        <input type="hidden" name="type" value="tip">
+                        <div class="form-group">
+                            <textarea class="form-control main__textarea" rows="3" name="tip"></textarea>
+                            <button type="submit" class="btn btn-primary">제출하기</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

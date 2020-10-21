@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, redirect, url_for, flash
 from .dmvhaninlib.database import Database
 from .dmvhaninlib.send_email import Gmail
 from .dmvhaninlib.filestream import upload_request_file_to_s3
+from .dmvhaninlib.logging import get_client_ip
 
 import os
 
@@ -14,8 +15,33 @@ def create_app():
         MAX_CONTENT_LENGTH=16*1024*1024,
     )
 
-    @app.route("/", methods=('GET', ))
+    @app.route("/", methods=('GET', 'POST'))
     def index():
+        if request.method=='POST':
+            t = request.form['type']
+            if t == 'agent':
+                name = request.form['name']
+                company = request.form['company']
+                phone = request.form['phone']
+                email = request.form['email']
+                div = request.form['div']
+                
+                db.update_rows(
+                    "INSERT INTO {div} (name, company, phone, email, request_flag) "\
+                    "VALUES (%s, %s, %s, %s, %s)".format(div=div), [name, company, phone, email, True]
+                )
+                flash('반갑습니다. 등록 후 이메일 보내드리겠습니다.')
+                return redirect(url_for('index'))
+            elif t == 'tip':
+                tip = request.form['tip']
+                if tip:
+                    db.update_rows(
+                        "INSERT INTO tip (tip, ip_address) "\
+                        "VALUES (%s, %s) ",
+                        [tip, get_client_ip()]
+                    )
+                    flash('의견 감사합니다. 발전하는 DMV한인이 되겠습니다.')
+                    return redirect(url_for('index'))
         return render_template('index.html')
         
     @app.route('/thank/<s>')
