@@ -18,7 +18,14 @@ def index():
     num_active_tip = db.select_row(
         "SELECT COUNT(*) FROM tip WHERE active_flag = TRUE AND confirm=FALSE"
     )['count']
-    return render_template('admin/index.html', num_business_request = num_business_request, num_active_tip = num_active_tip)
+    num_dealer_request = db.select_row(
+        "SELECT COUNT(*) FROM dealer WHERE request_flag = TRUE"
+    )['count']
+    num_realtor_request = db.select_row(
+        "SELECT COUNT(*) FROM realtor WHERE request_flag = TRUE"
+    )['count']
+    return render_template('admin/index.html', num_business_request = num_business_request, num_active_tip = num_active_tip, 
+                            num_agent_request = num_realtor_request + num_dealer_request)
     
 @bp.route('/business_req_list', methods=('GET', ))
 def business_request_list():
@@ -63,20 +70,27 @@ def business_request_detail(request_id):
 @bp.route('/agent-manage', methods=('GET','POST'))
 def agent_manage():
     if request.method=='POST':
+        t = request.form['type']
         div = request.form['div']
         id = request.form['id']
-        db.update_rows(
-            "UPDATE {div} SET active_flag=FALSE WHERE {div}_id = %s".format(div=div),
-            [id]
-        )
-        return redirect('admin.agent_manage')
+        if t == 'confirm':
+            db.update_rows(
+                "UPDATE {div} SET request_flag=FALSE WHERE {div}_id = %s".format(div=div),
+                [id]
+            )
+        elif t == 'delete':
+            db.update_rows(
+                "UPDATE {div} SET active_flag=FALSE WHERE {div}_id = %s".format(div=div),
+                [id]
+            )
+        return redirect(url_for('admin.agent_manage'))
         
     agents = db.select_rows(
-        "SELECT 'realtor' AS div, realtor_id AS id, name, company, phone, email "\
+        "SELECT 'realtor' AS div, realtor_id AS id, name, company, phone, email, request_flag "\
         "FROM realtor "\
         "WHERE active_flag=TRUE "\
         "UNION ALL "\
-        "SELECT 'dealer' AS div, dealer_id AS id, name, company, phone, email "\
+        "SELECT 'dealer' AS div, dealer_id AS id, name, company, phone, email, request_flag "\
         "FROM dealer "
         "WHERE active_flag=TRUE "\
         "ORDER BY div DESC, id "\
@@ -127,8 +141,20 @@ def agent_modify(div, id):
     return render_template('admin/agent_create.html', modify=True, agent=agent, div=div)
     
     
-@bp.route('/tip', methods=('GET',))
+@bp.route('/tip', methods=('GET','POST'))
 def tip():
+    if request.method=='POST':
+        t = request.form['type']
+        id = request.form['id']
+        if t == 'confirm':
+            db.update_rows(
+                "UPDATE tip SET confirm = TRUE WHERE tip_id = %s", [id]
+            )
+        elif t == 'delete':
+            db.update_rows(
+                "UPDATE tip SET active_flag = FALSE WHERE tip_id = %s", [id]
+            )
+        return redirect(url_for('admin.tip'))
     tips = db.select_rows(
         "SELECT * FROM tip "\
         "WHERE active_flag = TRUE "\
@@ -140,3 +166,5 @@ def tip():
         tips = tips.to_dict('index')
     
     return render_template('admin/tip_list.html', tips = tips)
+    
+    

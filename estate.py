@@ -19,7 +19,7 @@ def index():
         "SELECT * FROM estate a "\
         "INNER JOIN realtor b "\
         "ON a.realtor_id = b.realtor_id "\
-        "WHERE a.active_flag = TRUE AND b.active_flag = TRUE"\
+        "WHERE a.active_flag = TRUE AND b.active_flag = TRUE "\
         "ORDER BY on_sale DESC, estate_id"
     )
     if estates.empty:

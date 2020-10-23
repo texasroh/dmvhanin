@@ -25,6 +25,11 @@
                     <div class="card-body">
                         <h5 class="card-title">에이전트 관리</h5>
                         <h6 class="card-subtitle mb-2 text-muted">등록, 삭제</h6>
+                        {% if num_agent_request %}
+                        <span class="badge badge-pill badge-success">{{ num_agent_request }}</span>
+                        {% else %}
+                        <span class="badge badge-pill badge-secondary">None</span>
+                        {% endif %}
                     </div>
                 </div>
             </a>

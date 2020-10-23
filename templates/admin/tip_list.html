@@ -20,10 +20,16 @@
             <td>
                 {% if not tip['confirm'] %}
                 <div class="row">
-                    <a href="#" class="btn btn-sm btn-success">확인</a>
-                    <form method="post" id="delete_form_{{ idx }}">
-                        <button class="btn btn-sm btn-danger" onclick="confirm_delete({{ idx }})">삭제</button>
+                    <form method="post">
+                        <input type="hidden" name="type" value="confirm">
+                        <input type="hidden" name="id" value="{{ tip['tip_id'] }}">
+                        <button class="btn btn-sm btn-success">확인</button>
                     </form>
+                    <form method="post" id="delete_form_{{ idx }}">
+                        <input type="hidden" name="type" value="delete">
+                        <input type="hidden" name="id" value="{{ tip['tip_id'] }}">
+                    </form>
+                    <button class="btn btn-sm btn-danger" onclick="confirm_delete({{ idx }})">삭제</button>
                 </div>
                 {% endif %}
             </td>
