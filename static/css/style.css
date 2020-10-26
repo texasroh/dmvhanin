@@ -44,14 +44,15 @@ img{
     max-width: 100%;
 }
 .logo {
-	width: 25rem;
-    max-width: 100vw;
-    padding: 1.5rem;
+	//width: 25rem;
+    //max-width: 100vw;
+    //padding: 1.5rem;
+    margin-right: 2rem;
 }
 
 .navbar {
-	border-top: 2px solid #EAEAEA;
-	border-bottom: 2px solid #EAEAEA;
+	//border-top: 2px solid #EAEAEA;
+	//border-bottom: 2px solid #EAEAEA;
 }
 
 .nav-custom-color li a{
