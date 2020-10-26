@@ -1,8 +1,6 @@
 {% extends 'auth/auth_base.html' %}
 
-{% block header %}
-	<h1>{% block title %}{% block modal_title %}{{ g.user['user_id'] }}님 계정 설정{% endblock %}{% endblock %}</h1>
-{% endblock %}
+{% block title %}{% block modal_title %}{{ g.user['user_id'] }}님 계정 설정{% endblock %}{% endblock %}
 
 {% block auth_content %}
     {% if g.user['email_verified'] %}

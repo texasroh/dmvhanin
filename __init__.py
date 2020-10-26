@@ -27,8 +27,8 @@ def create_app():
                 div = request.form['div']
                 
                 db.update_rows(
-                    "INSERT INTO {div} (name, company, phone, email, request_flag) "\
-                    "VALUES (%s, %s, %s, %s, %s)".format(div=div), [name, company, phone, email, True]
+                    "INSERT INTO {div} (name, company, phone, email, confirm) "\
+                    "VALUES (%s, %s, %s, %s, FALSE)".format(div=div), [name, company, phone, email]
                 )
                 flash('반갑습니다. 등록 후 이메일 보내드리겠습니다.')
                 return redirect(url_for('index'))

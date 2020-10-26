@@ -1,9 +1,24 @@
 {% extends 'business/business_base.html' %}
 
+{% block title %}{{ biz['business_name_kor'] }} ({{ biz['business_name_eng'] }}) {% endblock %}
+
+{% block meta %}
+<meta name="description" content="{{ biz['description'] }}">
+{% endblock %}
 
 {% block business_content %}
-<h3>{{ biz['business_name_kor'] }}</h3>
-<h4 class="text-muted">({{ biz['business_name_eng'] }})</h4>
+<div class="text-break text-wrap"><h5>{{ biz['business_name_kor'] }}</h5></div>
+<div class="text-break text-wrap"><h6 class="text-muted">({{ biz['business_name_eng'] }})</h6></div>
+<hr>
+{% if biz['description'] %}
+<div class="text-break text-wrap"><p>{{ biz['description'] }}</p></div>
+{% endif %}
+
+{% for img in biz['images'] %}
+{% if img %}
+<img src="{{ img }}" class="estate-img img-thumbnail" alt="Responsive image">
+{% endif %}
+{% endfor %}
 
 <hr>
 {% include 'review-input.html' %}

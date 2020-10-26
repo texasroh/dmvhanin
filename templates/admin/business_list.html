@@ -1,6 +1,7 @@
 {% extends 'admin/admin_base.html' %}
 
 {% block admin_content %}
+<h5>업소등록신청</h5>
 <table class="table table-sm table-hover">
     <thead>
         <tr>
@@ -13,11 +14,11 @@
     {% if business_list %}
     <tbody>
         {% for i, business in business_list.items() %}
-        <tr class="clickable-row" onclick="window.location = '{{ url_for('admin.business_request_detail', request_id = business['request_id']) }}'">
+        <tr class="clickable-row" onclick="window.location = '{{ url_for('admin.business_request_detail', business_id = business['business_id']) }}'">
             <th scope="row">{{ i+1 }}</th>
             <td>{{ business['business_name_kor'] }}</td>
             <td>{{ business['business_name_eng'] }}</td>
-            <td>{{ business['created_date'] }}</td>
+            <td></td>
         </tr>
         {% endfor %}
     </tbody>
@@ -26,3 +27,4 @@
     {% endif %}
 </table>
 {% endblock %}
+

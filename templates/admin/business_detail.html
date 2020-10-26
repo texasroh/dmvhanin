@@ -71,25 +71,32 @@
     </div>
     <div class="col-md-6">
         <form method="post">
-            <input type="hidden" name="dicision" value="approve">
+            <input type="hidden" name="decision" value="approve">
             <div class="form-group">
-                <label for="category">카테고리 선택</label>
-                <select class="form-control" id="category" name="category">
-                    <option>category</option>
+                <label for="category_id">카테고리 선택</label>
+                <select class="form-control" id="category_id" name="category_id">
+                    <option selected hidden>-----</option>
+                    {% for idx, category in categories.items() %}
+                    <option value="{{ category['category_id'] }}">{{ category['category1'] }} - {{ category['category2'] }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="row justify-content-end">
-                <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                </div>
             </div>
         </form>
         <hr>
         <form method="post">
-            <input type="hidden" name="dicision" value="reject">
+            <input type="hidden" name="decision" value="reject">
             <div class="form-group">
                 <textarea class="form-control" placeholder="거절사유" name="reason" rows=5></textarea>
             </div>
             <div class="row justify-content-end">
-                <button type="submit" class="btn btn-sm btn-danger justify-content-end">Reject</button>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-sm btn-danger justify-content-end">Reject</button>
+                </div>
             </div>
         </form>
     </div>

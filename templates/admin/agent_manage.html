@@ -37,22 +37,22 @@
             <td>{{ agent['email'] }}</td>
             <td>
                 <div class="row">
-                    {% if agent['request_flag'] %}
+                    {% if agent['confirm'] %}
+                    <a href="{{ url_for('admin.agent_modify', div=agent['div'], id=agent['id']) }}" class="btn btn-sm btn-warning">수정</a>
+                    {% else %}
                     <form method="post">
                         <input type="hidden" name="type" value="confirm">
                         <input type="hidden" name="div" value="{{ agent['div'] }}">
                         <input type="hidden" name="id" value="{{ agent['id'] }}">
                         <button type="submit" class="btn btn-sm btn-success">승인</button>
                     </form>
-                    {% else %}
-                    <a href="{{ url_for('admin.agent_modify', div=agent['div'], id=agent['id']) }}" class="btn btn-sm btn-warning">수정</a>
+                    {% endif %}
                     <form method="post" id="delete_form_{{ idx }}">
                         <input type="hidden" name="type" value="delete">
                         <input type="hidden" name="div" value="{{ agent['div'] }}">
                         <input type="hidden" name="id" value="{{ agent['id'] }}">
                     </form>
                     <button class="btn btn-sm btn-danger" onclick="confirm_delete({{ idx }}, '{{ agent['name'] }}')">삭제</button>
-                    {% endif %}
                 </div>
             </td>
         </tr>

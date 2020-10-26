@@ -13,16 +13,16 @@ def check_admin():
 @bp.route('/', methods=('GET',))
 def index():
     num_business_request = db.select_row(
-        "SELECT COUNT(*) FROM business_register_request WHERE active_flag = TRUE and verified = FALSE"
+        "SELECT COUNT(*) FROM business WHERE active_flag = TRUE and confirm = FALSE"
     )['count']
     num_active_tip = db.select_row(
         "SELECT COUNT(*) FROM tip WHERE active_flag = TRUE AND confirm=FALSE"
     )['count']
     num_dealer_request = db.select_row(
-        "SELECT COUNT(*) FROM dealer WHERE request_flag = TRUE"
+        "SELECT COUNT(*) FROM dealer WHERE active_flag = TRUE AND confirm = FALSE"
     )['count']
     num_realtor_request = db.select_row(
-        "SELECT COUNT(*) FROM realtor WHERE request_flag = TRUE"
+        "SELECT COUNT(*) FROM realtor WHERE active_flag = TRUE AND confirm = FALSE"
     )['count']
     return render_template('admin/index.html', num_business_request = num_business_request, num_active_tip = num_active_tip, 
                             num_agent_request = num_realtor_request + num_dealer_request)
@@ -30,31 +30,45 @@ def index():
 @bp.route('/business_req_list', methods=('GET', ))
 def business_request_list():
     business_list = db.select_rows(
-        "SELECT * FROM business_register_request WHERE active_flag = TRUE and verified = FALSE"
+        "SELECT * FROM business "\
+        "WHERE active_flag = TRUE and confirm = FALSE "\
+        "ORDER BY 1"
     )
     if business_list.empty:
         business_list = None
     else:
-        business_list['created_date'] = business_list['created_date'].dt.tz_convert('US/Eastern').apply(lambda x: x.strftime("%Y-%m-%d (%H:%M)"))
+        #business_list['created_date'] = business_list['created_date'].dt.tz_convert('US/Eastern').apply(lambda x: x.strftime("%Y-%m-%d (%H:%M)"))
         business_list = business_list.to_dict('index')
     return render_template('admin/business_list.html', business_list = business_list)
     
     
-@bp.route('/business_req_detail/<int:request_id>', methods=('GET', 'POST'))
-def business_request_detail(request_id):
+@bp.route('/business_req_detail/<int:business_id>', methods=('GET', 'POST'))
+def business_request_detail(business_id):
     if request.method == "POST":
         decision = request.form['decision']
         if decision == 'approve':
             category_id = request.form['category_id']
-        else:
+            ## 메일 발송작업
+            ##
+            db.update_rows(
+                "UPDATE business SET confirm = TRUE, category_id = %s "\
+                "WHERE business_id = %s", [category_id, business_id]
+            )
+        elif decision == 'reject':
             reason = request.form['reason']
+            ## 메일 발송작업
+            ##
+            db.update_rows(
+                "UPDATE business SET active_flag = FALSE "\
+                "WHERE business_id = %s", [business_id]
+            )
             
         return redirect(url_for('admin.business_request_list'))
 
             
             
     business = db.select_row(
-        "SELECT * FROM business_register_request WHERE active_flag = TRUE and verified = FALSE and request_id = %s", [request_id]
+        "SELECT * FROM business WHERE active_flag = TRUE and confirm = FALSE and business_id = %s", [business_id]
     )
     img_list = business['images']
     if img_list:
@@ -64,7 +78,12 @@ def business_request_detail(request_id):
     else:
         img_data = None
     business = {k:v if v else '-------' for k, v in business.items()}
-    return render_template('admin/business_detail.html', business = business, img_data = img_data)
+    
+    categories = db.select_rows(
+        "SELECT * FROM business_category "
+    ).to_dict('index')
+    
+    return render_template('admin/business_detail.html', business = business, img_data = img_data, categories = categories)
     
     
 @bp.route('/agent-manage', methods=('GET','POST'))
@@ -75,7 +94,7 @@ def agent_manage():
         id = request.form['id']
         if t == 'confirm':
             db.update_rows(
-                "UPDATE {div} SET request_flag=FALSE WHERE {div}_id = %s".format(div=div),
+                "UPDATE {div} SET confirm=TRUE WHERE {div}_id = %s".format(div=div),
                 [id]
             )
         elif t == 'delete':
@@ -86,11 +105,11 @@ def agent_manage():
         return redirect(url_for('admin.agent_manage'))
         
     agents = db.select_rows(
-        "SELECT 'realtor' AS div, realtor_id AS id, name, company, phone, email, request_flag "\
+        "SELECT 'realtor' AS div, realtor_id AS id, name, company, phone, email, confirm "\
         "FROM realtor "\
         "WHERE active_flag=TRUE "\
         "UNION ALL "\
-        "SELECT 'dealer' AS div, dealer_id AS id, name, company, phone, email, request_flag "\
+        "SELECT 'dealer' AS div, dealer_id AS id, name, company, phone, email, confirm "\
         "FROM dealer "
         "WHERE active_flag=TRUE "\
         "ORDER BY div DESC, id "\

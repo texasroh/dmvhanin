@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app,
 )
-from .dmvhaninlib.filestream import upload_file_to_tmp_local, upload_file_to_s3
+from .dmvhaninlib.filestream import upload_file_to_tmp_local, upload_file_to_s3, upload_request_file_to_s3
 from . import db
 from .auth import generate_hash, admin_only
 from .dmvhaninlib.logging import get_client_ip
@@ -15,7 +15,10 @@ bp = Blueprint('business', __name__, url_prefix='/business')
 def index():
     cat_list = db.select_rows(
         "SELECT * FROM business_category a "\
-        "INNER JOIN business b ON a.category_id = b.category_id "\
+        "INNER JOIN business b "\
+        "ON a.category_id = b.category_id "\
+        "AND b.active_flag = TRUE "\
+        "AND b.confirm = TRUE "\
         "ORDER BY a.category_id"
         #"SELECT * FROM business_category ORDER BY 1"
     )[['category_id', 'category1', 'category2']].drop_duplicates()
@@ -40,7 +43,8 @@ def search():
         "   (SELECT business_id, AVG(rate::float) as avg_rate "\
         "    FROM business_review WHERE rate IS NOT NULL GROUP BY business_id) b "\
         "ON a.business_id = b.business_id "\
-        "WHERE business_name_kor LIKE %s OR business_name_eng LIKE %s"\
+        "WHERE active_flag = TRUE, confirm = TRUE "\
+        "AND business_name_kor LIKE %s OR business_name_eng LIKE %s"\
         'ORDER BY -b.avg_rate, business_name_kor collate "ko_KR.utf8"',
         ['%'+biz_name+'%', '%'+biz_name+'%']
     )
@@ -67,6 +71,8 @@ def business_list(category_id):
         "    FROM business_review WHERE rate IS NOT NULL GROUP BY business_id) b "\
         "ON a.business_id = b.business_id "\
         "WHERE category_id = %s "\
+        "   AND active_flag = TRUE "\
+        "   AND confirm = TRUE "\
         'ORDER BY -b.avg_rate, business_name_kor collate "ko_KR.utf8"',
         [category_id]
     )
@@ -79,7 +85,7 @@ def business_list(category_id):
 @bp.route('/<int:business_id>', methods=('GET', 'POST'))
 def business_detail(business_id):
     biz = db.select_row(
-        "SELECT * FROM business WHERE business_id = %s",
+        "SELECT * FROM business WHERE business_id = %s AND active_flag = TRUE AND confirm = TRUE",
         [business_id]
     )
     
@@ -123,6 +129,7 @@ def business_detail(business_id):
             [business_id, rate, comment, get_client_ip(), g.user['user_id'], sort, depth+1]
         )
         
+    biz['images'] = biz['images'].split(';')
     
     reviews = db.select_rows(
         "SELECT * FROM business_review WHERE business_id = %s ORDER BY sort",
@@ -156,6 +163,7 @@ def register_request():
             description = BeautifulSoup(description).text
         
         #이미지 저장
+        '''
         img_list = []
         idx = 0
         for i in range(5):
@@ -168,11 +176,21 @@ def register_request():
                 img_list.append(path)
                 
         img_list = ';'.join(img_list)
+        '''
+        files = ['' for _ in range(5)]
+        for i in range(5):
+            file = request.files['file'+str(i+1)]
+            if file:
+                url = upload_request_file_to_s3(file, folder='business_pics')
+            else:
+                url = ''
+            files[i] = url
+        files = ';'.join(files)
         
         db.update_rows(
-            "INSERT INTO business_register_request (business_name_kor, business_name_eng, address, city, state, zipcode, phone_number, description, images, email) "\
-            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            [business_name_kor, business_name_eng, address, city, state, zipcode, phone_number, description, img_list, email]
+            "INSERT INTO business (business_name_kor, business_name_eng, address, city, state, zipcode, phone_number, description, images, email, confirm) "\
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, FALSE)",
+            [business_name_kor, business_name_eng, address, city, state, zipcode, phone_number, description, files, email]
         )
         return redirect(url_for('thank', s='request'))
     

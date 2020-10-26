@@ -22,8 +22,8 @@ def get_board_list():
 @bp.route('/', methods=('GET','POST'))
 def index():
     board_list = get_board_list()
-
-    return render_template('board/index.html', board_list = board_list.to_dict('records'))
+    return redirect(url_for('buynsell.content_list',board_name='kids'))
+    #return render_template('board/index.html', board_list = board_list.to_dict('records'))
     
     
 @bp.route('/write', methods=('GET', 'POST'))

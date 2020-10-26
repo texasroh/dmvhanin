@@ -1,8 +1,6 @@
 {% extends 'auth/auth_base.html' %}
 
-{% block header %}
-	<h1>{% block title %}{% block modal_title %}로그인{% endblock %}{% endblock%}</h1>
-{% endblock %}
+{% block title %}{% block modal_title %}로그인{% endblock %}{% endblock%}
 
 {% block auth_content %}
     <form method="post">

@@ -1,5 +1,8 @@
 {% extends 'board/board_base.html' %}
 
+{% block title %}{{ content['title'] }}{% endblock %}
+
+
 {% block board_content %}
 <div class="container">
     <div class="text-break text-wrap"><h5>{{ content['title'] }}</h5></div>

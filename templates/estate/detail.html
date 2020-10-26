@@ -1,5 +1,11 @@
 {% extends 'estate/estate_base.html' %}
 
+{% block title %}{{ estate['title'] }}{% endblock %}
+
+{% block meta %}
+<meta name="description" content="{{ estate['description'] }}">
+{% endblock %}
+
 {% block estate_content %}
 <br>
 <center>
@@ -158,9 +164,11 @@
 
 
 {% for image in estate['image'] %}
-    {% if image %}
-    <img src="{{ image }}" class="estate-img img-thumbnail" alt="Responsive image">
-    {% endif %}
+    <center>
+        {% if image %}
+        <img src="{{ image }}" class="estate-img img-thumbnail" alt="Responsive image">
+        {% endif %}
+    </center>
 {% endfor %}
 
 
