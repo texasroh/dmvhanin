@@ -29,12 +29,28 @@ def register():
     if code:
         try:
             agent = register_decode(str(code))
+            agent = db.select_row(
+                "SELECT {div}_id AS id, '{div}' AS type, * FROM {div} WHERE {div}_id = %s".format(div=agent['type']), [agent['id']]
+            )
+            print(agent)
         except:
             logging('code injection tried', 'all-request.log')
             flash('Something got error')
             return redirect(url_for('index'))
     else:
         agent=None
+        
+    if agent and db.select_row(
+        "SELECT 1 FROM user_acct a "\
+        "INNER JOIN {div} b "\
+        "ON a.{div}_id = b.{div}_id "\
+        "WHERE a.{div}_id = %s".format(div=agent['type']),
+        [agent['id']]
+    ):
+        flash('Already registered agent.')
+        return redirect(url_for('index'))
+        
+        
     user_id = ''
     nickname = ''
     email_addr = ''

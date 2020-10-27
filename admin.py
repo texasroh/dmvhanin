@@ -182,6 +182,7 @@ def tip():
     if tips.empty:
         tips = None
     else:
+        tips['created'] = tips['created'].dt.tz_convert('US/Eastern').apply(lambda x: x.strftime("%Y-%m-%d (%H:%M)"))
         tips = tips.to_dict('index')
     
     return render_template('admin/tip_list.html', tips = tips)

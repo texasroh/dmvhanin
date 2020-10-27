@@ -3,6 +3,9 @@
 {% block title %}{% block modal_title %}{% if business_flag %}비지니스 {% endif %}회원가입{% if agent and agent['type']=="realtor" %} - 부동산에이전트{% elif agent and agent['type']=="dealer" %} - 자동차딜러{% endif %}{% endblock %}{% endblock %}
 
 {% block auth_content %}
+    {% if agent %}
+    <p class="font-weight-light">반갑습니다. "{{ agent['name'] }}" 님</p>
+    {% endif %}
     <form method="post" {% if business_flag %}action="{{ url_for('auth.register') }}" {% endif %}>
         <input type="hidden" name="register">
         <div class="form-group row">
