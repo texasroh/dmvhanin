@@ -87,12 +87,11 @@ def register():
             error = '이미 사용중인 이메일입니다.'
             
         if error is None:
-            code = request.args.get('code', '')
             # 부동산업자나 자동차딜러용 회원가입
             if agent:
                 db.update_rows(
                     "INSERT INTO user_acct (user_id, nickname, password, email, {}_id) "\
-                    "VALUES (%S, %S, %S, %S, %S".format(agent['type']),
+                    "VALUES (%s, %s, %s, %s, %s)".format(agent['type']),
                     [user_id, nickname, generate_password_hash(password+salt), email_addr, agent['id']]
                 )
             else:
