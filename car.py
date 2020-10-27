@@ -91,7 +91,7 @@ def create():
            "SELECT LASTVAL()"
         )['lastval']
         return redirect(url_for('estate.detail', estate_id = estate_id))
-    return render_template('estate/create.html')
+    return render_template('car/create.html')
     
 @bp.route('/detail/<int:car_id>', methods=('GET',))
 def detail(car_id):

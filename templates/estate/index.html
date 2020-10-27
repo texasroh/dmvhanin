@@ -12,7 +12,7 @@
         <h4 class="col-auto">부동산 리스트</h4>
         {% if g.user['realtor_id'] %}
         <div class="col-auto">
-            <a class="btn btn-sm btn-dark" href="{{ url_for('estate.create') }}">매물등록</a>
+            <a class="btn btn-sm btn-dark" href="{{ url_for('estate.create') }}">+ 매물등록</a>
             <a class="btn btn-sm btn-light" href="{{ url_for('estate.mylist') }}">내매물관리</a>
         </div>
         {% endif %}

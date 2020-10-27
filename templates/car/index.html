@@ -6,8 +6,8 @@
         <h4 class="col-auto">자동차 리스트</h4>
         {% if g.user['dealer_id'] %}
         <div class="col-auto">
-            <a class="btn btn-sm btn-dark" href="{{ url_for('estate.create') }}">자동차등록</a>
-            <a class="btn btn-sm btn-light" href="{{ url_for('estate.mylist') }}">내자동차관리</a>
+            <a class="btn btn-sm btn-dark" href="{{ url_for('car.create') }}">+ 자동차등록</a>
+            <a class="btn btn-sm btn-light" href="{{ url_for('car.mylist') }}">내자동차관리</a>
         </div>
         {% endif %}
     </div>
