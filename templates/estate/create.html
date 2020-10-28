@@ -8,6 +8,7 @@
 
 {% block estate_content %}
 <br>
+<h5>부동산 매물 등록</h5>
 <form method="post" enctype="multipart/form-data">
     <div class="form-group row">
         <label for="title" class="col-sm-2 col-form-label">제목</label>
@@ -102,6 +103,7 @@
         <label for="description">상세설명</label>
         <textarea name="description" id="description" class="form-control" rows="5" placeholder="학군 등 기타정보">{% if estate %}{{ estate['description'] }}{% endif %}</textarea>
     </div>
+    <hr>
     <label for="file1">사진첨부 (jpg, png only) 최대 8장.</label>
     {% if estate %}
     {% for idx, image in estate['image'] %}

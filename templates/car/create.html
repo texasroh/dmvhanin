@@ -1,36 +1,95 @@
 {% extends 'estate/estate_base.html' %}
 
+{% block title %}자동차 매물 등록{% endblock %}
+
+{% block meta %}
+<meta name="description" content="자동차 매물등록 폼입니다.">
+{% endblock %}
+
 {% block estate_content %}
 <br>
+<h5>자동차 매물 등록</h5>
 <form method="post" enctype="multipart/form-data">
     <div class="form-group row">
         <label for="title" class="col-sm-2 col-form-label">제목</label>
         <div class="col-sm-10">
-            <input type="text" name="title" id="title" class="form-control" {% if estate %}value="{{ estate['title'] }}"{% endif %} required>
+            <input type="text" name="title" id="title" class="form-control" {% if car %}value="{{ car['title'] }}"{% endif %} required>
         </div>
     </div>
     <hr>
-    <div class="form-group">
-        <label for="address">Address</label>
-        <input type="text" class="form-control" id="address" name="address" {% if estate %}value="{{ estate['address'] }}"{% endif %} required>
-    </div>
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="city">City</label>
-            <input type="text" class="form-control" id="city" name="city" {% if estate %}value="{{ estate['city'] }}"{% endif %} required>
+    <div class="form-group row">
+        <label for="" class="col-sm-2">변속기</label>
+        <div class="col-sm-10">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="transmission" id="inlineRadio1" value="AUTO" {% if car and car['transmission'] == 'AUTO' %}checked{% endif %} required>
+                <label class="form-check-label" for="inlineRadio1">자동</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="transmission" id="inlineRadio2" value="MANUAL" {% if car and car['transmission'] == 'MANUAL' %}checked{% endif %}>
+                <label class="form-check-label" for="inlineRadio2">수동</label>
+            </div>
         </div>
-        <div class="form-group col-md-4">
-            <label for="state">State</label>
-            <select id="state" name="state" class="form-control" required>
+    </div>
+    <div class="form-group row">
+        <label for="" class="col-sm-2">연료</label>
+        <div class="col-sm-10">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="fuel" id="inlineRadio3" value="GAS" {% if car and car['fuel'] == 'GAS' %}checked{% endif %} required>
+                <label class="form-check-label" for="inlineRadio3">휘발유 (가솔린)</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="fuel" id="inlineRadio4" value="DIZEL" {% if car and car['fuel'] == 'DIZEL' %}checked{% endif %}>
+                <label class="form-check-label" for="inlineRadio4">디젤</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="fuel" id="inlineRadio5" value="ELECTRIC" {% if car and car['fuel'] == 'ELECTRIC' %}checked{% endif %}>
+                <label class="form-check-label" for="inlineRadio5">전기</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="car_type" class="col-sm-2 col-form-label">자동차타입</label>
+        <div class="col-sm-2">
+            <select id="car_type" name="car_type" class="form-control" required>
                 <option disabled selected hidden>Choose...</option>
-                <option {% if estate and estate['state'] == 'VA' %}selected{% endif %}>VA</option>
-                <option {% if estate and estate['state'] == 'DC' %}selected{% endif %}>DC</option>
-                <option {% if estate and estate['state'] == 'MD' %}selected{% endif %}>MD</option>
+                <option value="COUPE" {% if car and car['car_type'] == 'COUPE' %}selected{% endif %}>쿠페</option>
+                <option value="SEDAN" {% if car and car['car_type'] == 'SEDAN' %}selected{% endif %}>세단</option>
+                <option value="WAGON" {% if car and car['car_type'] == 'WAGON' %}selected{% endif %}>웨건</option>
+                <option value="SUV" {% if car and car['car_type'] == 'SUV' %}selected{% endif %}>SUV</option>
+                <option value="CONVERTIBLE" {% if car and car['car_type'] == 'CONVERTIBLE' %}selected{% endif %}>컨버터블</option>
+                <option value="HATCHBACK" {% if car and car['car_type'] == 'HATCHBACK' %}selected{% endif %}>해치백</option>
+                <option value="LIMO" {% if car and car['car_type'] == 'LIMO' %}selected{% endif %}>리무</option>
+                <option value="VAN" {% if car and car['car_type'] == 'VAN' %}selected{% endif %}>밴</option>
+                <option value="TRUCK" {% if car and car['car_type'] == 'TRUCK' %}selected{% endif %}>트럭</option>
+                <option value="SPORTS" {% if car and car['car_type'] == 'SPORTS' %}selected{% endif %}>스포츠</option>
+                <option value="CAMPING" {% if car and car['car_type'] == 'CAMPING' %}selected{% endif %}>캠핑</option>
+                <option value="BIKE" {% if car and car['car_type'] == 'BIKE' %}selected{% endif %}>바이크</option>
+                <option value="RV" {% if car and car['car_type'] == 'RV' %}selected{% endif %}>RV</option>
             </select>
         </div>
-        <div class="form-group col-md-2">
-            <label for="zipcode">Zipcode</label>
-            <input type="text" class="form-control" id="zipcode" name="zipcode" {% if estate %}value="{{ estate['zipcode'] }}"{% endif %} required>
+    </div>
+    <div class="form-group row">
+        <label for="manufacturer" class="col-sm-2 col-form-label">제조사</label>
+        <div class="col-sm-3">
+            <input type="text" name="manufacturer" id="manufacturer" class="form-control" {% if car %}value="{{ car['manufacturer'] }}"{% endif %} required>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="model" class="col-sm-2 col-form-label">모델</label>
+        <div class="col-sm-3">
+            <input type="text" name="model" id="model" class="form-control" {% if car %}value="{{ car['model'] }}"{% endif %} required>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="seat" class="col-sm-2 col-form-label">인승</label>
+        <div class="col-sm-1">
+            <input type="number" name="seat" id="seat" class="form-control" min="1"{% if car %}value="{{ car['seat'] }}"{% endif %} required>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="color" class="col-sm-2 col-form-label">색상</label>
+        <div class="col-sm-3">
+            <input type="text" name="color" id="color" class="form-control" {% if car %}value="{{ car['color'] }}"{% endif %} required>
         </div>
     </div>
     <hr>
@@ -38,67 +97,76 @@
         <label for="" class="col-sm-2">거래종류</label>
         <div class="col-sm-10">
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="sale_type" id="inlineRadio1" value="SALE" {% if estate and estate['sale_type'] == 'SALE' %}checked{% endif %} required>
-                <label class="form-check-label" for="inlineRadio1">매매</label>
+                <input class="form-check-input" type="radio" name="sale_type" id="inlineRadio6" value="SALE" {% if car and car['sale_type'] == 'SALE' %}checked{% endif %} required>
+                <label class="form-check-label" for="inlineRadio6">매매</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="sale_type" id="inlineRadio2" value="RENT" {% if estate and estate['sale_type'] == 'RENT' %}checked{% endif %}>
-                <label class="form-check-label" for="inlineRadio2">렌트</label>
+                <input class="form-check-input" type="radio" name="sale_type" id="inlineRadio7" value="RENT" {% if car and car['sale_type'] == 'RENT' %}checked{% endif %}>
+                <label class="form-check-label" for="inlineRadio7">렌트</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="sale_type" id="inlineRadio8" value="LEASE" {% if car and car['sale_type'] == 'LEASE' %}checked{% endif %}>
+                <label class="form-check-label" for="inlineRadio8">리스</label>
             </div>
         </div>
     </div>
     <div class="form-group row">
-        <label for="house_type" class="col-sm-2 col-form-label">하우스타입</label>
+        <label for="" class="col-sm-2">중고여부</label>
+        <div class="col-sm-10">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="used" id="inlineRadio9" value="NEW" {% if car and car['used'] == 'NEW' %}checked{% endif %} required>
+                <label class="form-check-label" for="inlineRadio9">새차</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="used" id="inlineRadio10" value="USED" {% if car and car['used'] == 'USED' %}checked{% endif %}>
+                <label class="form-check-label" for="inlineRadio10">중고</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="vin" class="col-sm-2 col-form-label">VIN 넘버</label>
+        <div class="col-sm-3">
+            <input type="text" name="vin" id="vin" class="form-control" {% if car %}value="{{ car['vin'] }}"{% endif %} required>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="mileage" class="col-sm-2 col-form-label">마일리지</label>
+        <div class="col-sm-3">
+            <input type="number" name="mileage" id="mileage" class="form-control" min="0" {% if car %}value="{{ car['mileage'] }}"{% endif %} required>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="year" class="col-sm-2 col-form-label">년식 (yyyy)</label>
+        <div class="col-sm-3">
+            <input type="number" name="year" id="year" class="form-control" min="1900" {% if car %}value="{{ car['year'] }}"{% endif %} required>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="displacement" class="col-sm-2 col-form-label">배기량 (cc)</label>
         <div class="col-sm-2">
-            <select id="house_type" name="house_type" id="house_type" class="form-control" required>
-                <option disabled selected hidden>Choose...</option>
-                <option value="SINGLE" {% if estate and estate['house_type'] == 'SINGLE' %}selected{% endif %}>Single House</option>
-                <option value="TOWN" {% if estate and estate['house_type'] == 'TOWN' %}selected{% endif %}>Town House</option>
-                <option value="APART" {% if estate and estate['house_type'] == 'APART' %}selected{% endif %}>Apartment</option>
-                <option value="CONDO" {% if estate and estate['house_type'] == 'CONDO' %}selected{% endif %}>Condominium</option>
-                <option value="COMMERCIAL" {% if estate and estate['house_type'] == 'COMMERCIAL' %}selected{% endif %}>Commercial</option>
-                <option value="BIZ" {% if estate and estate['house_type'] == 'BIZ' %}selected{% endif %}>Business</option>
-                <option value="ETC" {% if estate and estate['house_type'] == 'ETC' %}selected{% endif %}>기타</option>
-            </select>
+            <input type="number" name="displacement" id="displacement" class="form-control" min="0" {% if car %}value="{{ car['displacement'] }}"{% endif %} required>
         </div>
     </div>
     <div class="form-group row">
-        <label for="num_room" class="col-sm-2 col-form-label">방 갯수</label>
+        <label for="accident" class="col-sm-2 col-form-label">사고횟수</label>
         <div class="col-sm-1">
-            <input type="number" name="num_room" id="num_room" class="form-control" min="0" {% if estate %}value="{{ estate['num_room'] }}"{% endif %} required>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="num_rest" class="col-sm-2 col-form-label">화장실 갯수</label>
-        <div class="col-sm-1">
-            <input type="number" name="num_rest" id="num_rest" class="form-control" min="0" {% if estate %}value="{{ estate['num_rest'] }}"{% endif %} required>
+            <input type="number" name="accident" id="accident" class="form-control" min="1900" {% if car %}value="{{ car['accident'] }}"{% endif %} required>
         </div>
     </div>
     <div class="form-group row">
         <label for="price" class="col-sm-2 col-form-label">가격 ($)</label>
         <div class="col-sm-3">
-            <input type="number" name="price" id="price" class="form-control" min="0" {% if estate %}value="{{ estate['price'] }}"{% endif %} required>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="year" class="col-sm-2 col-form-label">시공년도 (yyyy)</label>
-        <div class="col-sm-3">
-            <input type="number" name="year" id="year" class="form-control" min="1900" {% if estate %}value="{{ estate['year'] }}"{% endif %} required>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="size" class="col-sm-2 col-form-label">집 크기 (sqft)</label>
-        <div class="col-sm-3">
-            <input type="number" name="size" id="size" class="form-control" min="0" {% if estate %}value="{{ estate['size'] }}"{% endif %} required>
+            <input type="number" name="price" id="price" class="form-control" min="0" {% if car %}value="{{ car['price'] }}"{% endif %} required>
         </div>
     </div>
     <div class="form-group">
         <label for="description">상세설명</label>
-        <textarea name="description" id="description" class="form-control" rows="5" placeholder="학군 등 기타정보">{% if estate %}{{ estate['description'] }}{% endif %}</textarea>
+        <textarea name="description" id="description" class="form-control" rows="5" placeholder="기타 상세정보">{% if car %}{{ car['description'] }}{% endif %}</textarea>
     </div>
+    <hr>
     <label for="file1">사진첨부 (jpg, png only) 최대 8장.</label>
-    {% if estate %}
-    {% for idx, image in estate['image'] %}
+    {% if car %}
+    {% for idx, image in car['image'] %}
     <div class="form-group">
         {% if image %}
         <div id="imagecontainer{{idx}}">
@@ -145,7 +213,7 @@
     {% endif %}
     <div class="row justify-content-center">
         <button type="submit" class="btn btn-success col-auto">
-            {% if estate %}
+            {% if car %}
             수정
             {% else %}
             등록
