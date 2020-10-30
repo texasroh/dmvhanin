@@ -48,7 +48,7 @@
             </div>
         </div>
         -->
-        <nav class="navbar navbar-expand-sm nav-custom-color navbar-dark bg-dark">
+        <nav class="navbar sticky-top navbar-expand-sm nav-custom-color navbar-dark bg-dark">
             <div class="container">
                 <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='logo2.png') }}" class="logo" alt="dmvhanin-logo" height="30"></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,11 +72,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('estate.index') }}"><b>부동산</b></a>
                         </li>
-                        {% if False %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('car.index') }}"><b>자동차</b></a>
                         </li>
-                        {% endif %}
                     </ul>
                     
                     <ul class="navbar-nav justify-content-end">

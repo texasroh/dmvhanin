@@ -1,16 +1,22 @@
-{% extends 'estate/estate_base.html' %}
+{% extends 'car/car_base.html' %}
 
-{% block estate_content %}
+{% block title %}{{ car['title'] }}{% endblock %}
+
+{% block meta %}
+<meta name="description" content="{{ car['description'] }}">
+{% endblock %}
+
+{% block car_content %}
 <br>
 <center>
-    <div class="text-break text-wrap"><h4>{{ estate['title'] }}</h4></div>
-    {% if estate['realtor_id'] == g.user['realtor_id'] %}
-    {% if estate['on_sale'] %}
-    <a href="{{ url_for('estate.complete', estate_id = estate['estate_id']) }}" class="btn btn-sm btn-light">판매완료</a>
+    <div class="text-break text-wrap"><h4>{{ car['title'] }}</h4></div>
+    {% if car['dealer_id'] == g.user['dealer_id'] %}
+    {% if car['on_sale'] %}
+    <a href="{{ url_for('car.complete', car_id = car['car_id']) }}" class="btn btn-sm btn-light">판매완료</a>
     {% else %}
-    <a href="{{ url_for('estate.complete', estate_id = estate['estate_id']) }}" class="btn btn-sm btn-light">거래완료 취소</a>
+    <a href="{{ url_for('car.complete', car_id = car['car_id']) }}" class="btn btn-sm btn-light">거래완료 취소</a>
     {% endif %}
-    <a href="{{ url_for('estate.modify', estate_id = estate['estate_id']) }}" class="btn btn-sm btn-light">수정</a>
+    <a href="{{ url_for('car.modify', car_id = car['car_id']) }}" class="btn btn-sm btn-light">수정</a>
     <a href="#" class="btn btn-sm btn-danger" onclick="delete_confirm()">삭제</a>
     {% elif g.user['admin_flag'] %}
     <a href="#" class="btn btn-sm btn-danger" onclick="delete_confirm()">삭제</a>
@@ -18,43 +24,39 @@
 </center>
 <div class="row border border-success estate-margin">
     <div class="col-sm-2 estate-agent-head">
-        <b>에이전트</b>
+        <b>딜러</b>
     </div>
     <div class="col-sm-10">
         <div class="row justify-content-around">
-            <div class="col row">
-                <div class="col-sm-4">
-                    <b>이름</b>
-                </div>
-                <div class="col-sm-8">
-                    {{ estate['name'] }}
-                </div>
+            <div class="col-4">
+                <b>이름</b>
             </div>
-            <div class="col row nomargin">
-                <div class="col-sm-4">
-                    <b>회사명</b>
-                </div>
-                <div class="col-sm-8">
-                    {{ estate['company'] }}
-                </div>
+            <div class="col-8 pr-0 text-break text-wrap">
+                {{ car['name'] }}
             </div>
         </div>
         <div class="row justify-content-around">
-            <div class="col row">
-                <div class="col-sm-4">
-                    <b>이메일</b>
-                </div>
-                <div class="col-sm-8">
-                    {{ estate['email'] }}
-                </div>
+            <div class="col-4">
+                <b>회사명</b>
             </div>
-            <div class="col row">
-                <div class="col-sm-4">
-                    <b>전화번호</b>
-                </div>
-                <div class="col-sm-8">
-                    {{ estate['phone'] }}
-                </div>
+            <div class="col-8 pr-0 text-break text-wrap">
+                {{ car['company'] }}
+            </div>            
+        </div>
+        <div class="row justify-content-around">
+            <div class="col-4">
+                <b>이메일</b>
+            </div>
+            <div class="col-8 pr-0 text-break text-wrap">
+                {{ car['email'] }}
+            </div>
+        </div>
+        <div class="row justify-content-around">
+            <div class="col-4">
+                <b>전화번호</b>
+            </div>
+            <div class="col-8">
+                {{ car['phone'] }}
             </div>
         </div>
     </div>
@@ -70,7 +72,7 @@
                 <b>진행상태</b>
             </div>
             <div class="col-8">
-                {% if estate['on_sale'] %}
+                {% if car['on_sale'] %}
                 <span class="text-success"><b>판매중</b></span>
                 {% else %}
                 <span class="text-danger"><b>거래완료</b></span>
@@ -82,8 +84,10 @@
                 <b>타입</b>
             </div>
             <div class="col-8">
-                {% if estate['sale_type'] == 'SALE' %}
+                {% if car['sale_type'] == 'SALE' %}
                 매매
+                {% elif car['sale_type'] == 'LEASE' %}
+                리스
                 {% else %}
                 렌트
                 {% endif %}
@@ -91,10 +95,10 @@
         </div>
         <div class="row">
             <div class="col-4">
-                <b>주소</b>
+                <b>변속기</b>
             </div>
             <div class="col-8">
-                <div class="text-break text-wrap">{{ estate['address'] }} {{estate['city'] }},<br> {{ estate['state'] }} {{ estate['zipcode'] }}</div>
+                {{ car['transmission'] }}
             </div>
         </div>
         <div class="row">
@@ -102,39 +106,87 @@
                 <b>종류</b>
             </div>
             <div class="col-8">
-                {{ estate['house_type'] }}
+                {{ car['car_type'] }}
             </div>
         </div>
         <div class="row">
             <div class="col-4">
-                <b>방 갯수</b>
+                <b>제조사</b>
             </div>
             <div class="col-8">
-                {{ estate['num_room'] }}
+                {{ car['manufacturer'] }}
             </div>
         </div>
         <div class="row">
             <div class="col-4">
-                <b>화장실 갯수</b>
+                <b>모델</b>
             </div>
             <div class="col-8">
-                {{ estate['num_rest'] }}
+                {{ car['model'] }}
             </div>
         </div>
         <div class="row">
             <div class="col-4">
-                <b>시공년도</b>
+                <b>인승</b>
             </div>
             <div class="col-8">
-                {{ estate['year'] }}
+                {{ car['seat'] }}인승
             </div>
         </div>
         <div class="row">
             <div class="col-4">
-                <b>크기 (sqft)</b>
+                <b>색상</b>
             </div>
             <div class="col-8">
-                {{ estate['size'] }} sqft
+                {{ car['color'] }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <b>중고여부</b>
+            </div>
+            <div class="col-8">
+                {{ car['used'] }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <b>VIN 넘버</b>
+            </div>
+            <div class="col-8">
+                {{ car['vin'] }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <b>마일리지</b>
+            </div>
+            <div class="col-8">
+                {{ car['mileage'] }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <b>년식</b>
+            </div>
+            <div class="col-8">
+                {{ car['year'] }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <b>배기량</b>
+            </div>
+            <div class="col-8">
+                {{ car['displacement'] }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <b>사고횟수</b>
+            </div>
+            <div class="col-8">
+                {{ car['accident'] }}
             </div>
         </div>
         <div class="row">
@@ -142,7 +194,7 @@
                 <b>가격 ($)</b>
             </div>
             <div class="col-8">
-                ${{ estate['price'] }}
+                ${{ car['price'] }}
             </div>
         </div>
         <div class="row">
@@ -150,14 +202,14 @@
                 <b>상세설명</b>
             </div>
             <div class="col-8">
-                <div class="text-break text-wrap">{{ estate['description'] }}</div>
+                <div class="text-break text-wrap">{{ car['description'] }}</div>
             </div>
         </div>
     </div>
 </div>
 
 
-{% for image in estate['image'] %}
+{% for image in car['image'] %}
     {% if image %}
     <img src="{{ image }}" class="estate-img img-thumbnail" alt="Responsive image">
     {% endif %}
@@ -170,7 +222,7 @@
 <script>
     function delete_confirm(){
         if (confirm("삭제하시겠습니까?") == true){
-            window.location="{{ url_for('estate.delete', estate_id=estate['estate_id']) }}"
+            window.location="{{ url_for('car.delete', car_id=car['car_id']) }}"
         }
     }
 </script>

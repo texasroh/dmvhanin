@@ -40,7 +40,7 @@ def mylist():
         return redirect(url_for('car.index'))
     cars = db.select_rows(
         "SELECT * FROM car "\
-        "WHERE active_flag = TRUE AND dealer_id = %s "\
+        "WHERE dealer_id = %s AND active_flag = TRUE "\
         "ORDER BY on_sale DESC, car_id", [g.user['dealer_id']]
     )
     
@@ -60,114 +60,132 @@ def create():
         return redirect(url_for('car.index'))
     if request.method == 'POST':
         title = request.form['title']
-        address = request.form['address']
-        city = request.form['city']
-        state = request.form['state']
-        zipcode = request.form['zipcode']
+        transmission = request.form['transmission']
+        fuel = request.form['fuel']
+        car_type = request.form['car_type']
+        manufacturer = request.form['manufacturer']
+        model = request.form['model']
+        seat = request.form['seat']
+        color = request.form['color']
         sale_type = request.form['sale_type']
-        house_type = request.form['house_type']
-        num_room = request.form['num_room']
-        num_rest = request.form['num_rest']
-        price = request.form['price']
+        used = request.form['used']
+        vin = request.form['vin']
+        mileage = request.form['mileage']
         year = request.form['year']
-        size = request.form['size']
+        displacement = request.form['displacement']
+        accident = request.form['accident']
+        price = request.form['price']
         description = request.form['description']
         files = ['' for _ in range(8)]
         for i in range(8):
             file = request.files['file'+str(i+1)]
             if file:
-                url = upload_request_file_to_s3(file)
+                url = upload_request_file_to_s3(file, folder="car")
             else:
                 url = ''
             files[i] = url
         files = ';'.join(files)
+        print(g.user['dealer_id'], title, description, files, manufacturer, model, used, mileage, year, car_type, displacement, seat, vin, 
+            color, fuel, transmission, price, accident, sale_type)
         db.update_rows(
-            "INSERT INTO estate (realtor_id, title, description, image, address, city, state, zipcode, "\
-            "   house_type, num_room, num_rest, year, sale_type, price, size) "\
-            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ",
-            [g.user['realtor_id'], title, description, files, address, city, state, zipcode, house_type, num_room, num_rest, year, sale_type, price, size]
+            "INSERT INTO car (dealer_id, title, description, image, manufacturer, model, used, mileage, year, car_type, displacement, seat, vin, "\
+            "                 color, fuel, transmission, price, accident, sale_type) "\
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ",
+            [g.user['dealer_id'], title, description, files, manufacturer, model, used, mileage, year, car_type, displacement, seat, vin, 
+            color, fuel, transmission, price, accident, sale_type]
         )
-        estate_id = db.select_row(
+        car_id = db.select_row(
            "SELECT LASTVAL()"
         )['lastval']
-        return redirect(url_for('estate.detail', estate_id = estate_id))
+        return redirect(url_for('car.detail', car_id = car_id))
     return render_template('car/create.html')
     
 @bp.route('/detail/<int:car_id>', methods=('GET',))
 def detail(car_id):
     car = db.select_row(
         "SELECT * FROM car a "\
-        "LEFT JOIN dealer b "\
+        "INNER JOIN dealer b "\
         "ON a.dealer_id = b.dealer_id "\
-        "WHERE a.active_flag = TRUE AND a.dealer_id = %s",[car_id]
+        "WHERE a.car_id = %s "\
+        "AND a.active_flag = TRUE "\
+        "AND b.active_flag = TRUE",[car_id]
     )
     
     if not car:
         return redirect(url_for('car.index'))
     
-    estate['num_room'] = int(estate['num_room'])
-    estate['size'] = int(estate['size'])
-    estate['price'] = int(estate['price'])
-    estate['num_rest'] = int(estate['num_rest']) if estate['num_rest'] == int(estate['num_rest']) else estate['num_rest']
-    if estate['image']:
-        estate['image'] = estate['image'].split(';')
+    car['mileage'] = int(car['mileage'])
+    car['year'] = int(car['year'])
+    car['displacement'] = int(car['displacement'])
+    car['seat'] = int(car['seat'])
+    car['price'] = int(car['price'])
+    car['accident'] = int(car['accident'])
+    car['image'] = car['image'].split(';')
     
-    return render_template('estate/detail.html', estate=estate)
+    return render_template('car/detail.html', car=car)
     
-@bp.route('/modify/<int:estate_id>', methods=('GET','POST'))
+@bp.route('/modify/<int:car_id>', methods=('GET','POST'))
 @login_required
-def modify(estate_id):
-    estate = db.select_row(
-        "SELECT * FROM estate WHERE active_flag = TRUE AND estate_id = %s", [estate_id]
+def modify(car_id):
+    car = db.select_row(
+        "SELECT * FROM car WHERE car_id = %s AND active_flag = TRUE", [car_id]
     )
-    if not estate or estate['realtor_id'] != g.user['realtor_id']:
-        return redirect(url_for('estate.index'))
+    if not car or car['dealer_id'] != g.user['dealer_id']:
+        return redirect(url_for('car.index'))
     
     if request.method == 'POST':
         title = request.form['title']
-        address = request.form['address']
-        city = request.form['city']
-        state = request.form['state']
-        zipcode = request.form['zipcode']
+        transmission = request.form['transmission']
+        fuel = request.form['fuel']
+        car_type = request.form['car_type']
+        manufacturer = request.form['manufacturer']
+        model = request.form['model']
+        seat = request.form['seat']
+        color = request.form['color']
         sale_type = request.form['sale_type']
-        house_type = request.form['house_type']
-        num_room = request.form['num_room']
-        num_rest = request.form['num_rest']
-        price = request.form['price']
+        used = request.form['used']
+        vin = request.form['vin']
+        mileage = request.form['mileage']
         year = request.form['year']
-        size = request.form['size']
+        displacement = request.form['displacement']
+        accident = request.form['accident']
+        price = request.form['price']
         description = request.form['description']
         files = ['' for _ in range(8)]
-        images = estate['image'].split(';')
+        images = car['image'].split(';')
         for i in range(8):
             file = request.files['file'+str(i+1)]
             if file:
-                url = upload_request_file_to_s3(file)
+                url = upload_request_file_to_s3(file, folder="car")
                 files[i] = url
             else:
                 files[i] = images[i]
         files = ';'.join(files)
         db.update_rows(
-            "UPDATE estate SET title=%s, description=%s, image=%s, address=%s, city=%s, state=%s, zipcode=%s, "\
-            "                  house_type=%s, num_room=%s, num_rest=%s, year=%s, sale_type=%s, price=%s, size=%s "\
-            "WHERE estate_id = %s ",
-            [title, description, files, address, city, state, zipcode, house_type, num_room, num_rest, year, sale_type, price, size, estate_id]
+            "UPDATE car SET title=%s, description=%s, image=%s, manufacturer=%s, model=%s, used=%s, mileage=%s, year=%s, car_type=%s, "\
+            "               displacement=%s, seat=%s, vin=%s, color=%s, "\
+            "               fuel=%s, transmission=%s, price=%s, accident=%s, sale_type=%s "\
+            "WHERE car_id = %s ",
+            [title, description, files, manufacturer, model, used, mileage, year, car_type, displacement, seat, vin, color,
+            fuel, transmission, price, accident, sale_type, car_id]
         )
 
-        return redirect(url_for('car.detail', estate_id = estate_id))
+        return redirect(url_for('car.detail', car_id = car_id))
     
-    estate['num_room'] = int(estate['num_room'])
-    estate['size'] = int(estate['size'])
-    estate['price'] = int(estate['price'])
-    estate['num_rest'] = int(estate['num_rest']) if estate['num_rest'] == int(estate['num_rest']) else estate['num_rest']
-    estate['image'] = enumerate(estate['image'].split(';'))
+    car['mileage'] = int(car['mileage'])
+    car['year'] = int(car['year'])
+    car['displacement'] = int(car['displacement'])
+    car['seat'] = int(car['seat'])
+    car['price'] = int(car['price'])
+    car['accident'] = int(car['accident'])
+    car['image'] = enumerate(car['image'].split(';'))
     
-    return render_template('car/create.html', estate=estate)
+    return render_template('car/create.html', car=car)
     
 @bp.route('/complete/<int:car_id>', methods=('GET',))
 def complete(car_id):
     car = db.select_row(
-        "SELECT * FROM car WHERE active_flag = TRUE AND car_id = %s", [car_id]
+        "SELECT * FROM car WHERE car_id = %s AND active_flag = TRUE", [car_id]
     )
     if car and (car['dealer_id'] == g.user['dealer_id']):
         db.update_rows(
@@ -179,7 +197,7 @@ def complete(car_id):
 @bp.route('/delete/<int:car_id>', methods=('GET',))
 def delete(car_id):
     car = db.select_row(
-        "SELECT * FROM car WHERE active_flag = TRUE AND car_id = %s", [car_id]
+        "SELECT * FROM car WHERE car_id = %s AND active_flag = TRUE", [car_id]
     )
     if car and (car['dealer_id'] == g.user['dealer_id'] or g.user['admin_flag']):
         db.update_rows(

@@ -41,7 +41,7 @@ def mylist():
         return redirect(url_for('estate.index'))
     estates = db.select_rows(
         "SELECT * FROM estate "\
-        "WHERE active_flag = TRUE AND realtor_id = %s "\
+        "WHERE realtor_id = %s AND active_flag = TRUE "\
         "ORDER BY on_sale DESC, estate_id", [g.user['realtor_id']]
     )
     
@@ -101,9 +101,11 @@ def create():
 def detail(estate_id):
     estate = db.select_row(
         "SELECT * FROM estate a "\
-        "LEFT JOIN realtor b "\
+        "INNER JOIN realtor b "\
         "ON a.realtor_id = b.realtor_id "\
-        "WHERE a.active_flag = TRUE AND a.estate_id = %s",[estate_id]
+        "WHERE a.estate_id = %s "\
+        "AND a.active_flag = TRUE "\
+        "AND b.active_flag = TRUE ",[estate_id]
     )
     
     if not estate:
@@ -122,7 +124,7 @@ def detail(estate_id):
 @login_required
 def modify(estate_id):
     estate = db.select_row(
-        "SELECT * FROM estate WHERE active_flag = TRUE AND estate_id = %s", [estate_id]
+        "SELECT * FROM estate WHERE estate_id = %s AND active_flag = TRUE", [estate_id]
     )
     if not estate or estate['realtor_id'] != g.user['realtor_id']:
         return redirect(url_for('estate.index'))
@@ -171,7 +173,7 @@ def modify(estate_id):
 @bp.route('/complete/<int:estate_id>', methods=('GET',))
 def complete(estate_id):
     estate = db.select_row(
-        "SELECT * FROM estate WHERE active_flag = TRUE AND estate_id = %s", [estate_id]
+        "SELECT * FROM estate WHERE estate_id = %s AND active_flag = TRUE", [estate_id]
     )
     if estate and (estate['realtor_id'] == g.user['realtor_id']):
         db.update_rows(
@@ -183,7 +185,7 @@ def complete(estate_id):
 @bp.route('/delete/<int:estate_id>', methods=('GET',))
 def delete(estate_id):
     estate = db.select_row(
-        "SELECT * FROM estate WHERE active_flag = TRUE AND estate_id = %s", [estate_id]
+        "SELECT * FROM estate WHERE estate_id = %s AND active_flag = TRUE", [estate_id]
     )
     if estate and (estate['realtor_id'] == g.user['realtor_id'] or g.user['admin_flag']):
         db.update_rows(

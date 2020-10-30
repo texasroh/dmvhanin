@@ -1,10 +1,12 @@
 {% extends 'car/car_base.html' %}
 
+{% block title %}내 자동차 리스트{% endblock %}
+
 {% block car_content %}
 <br>
 <div class="row justify-content-between">
     <div class="col-auto">
-        <h4>내 매물 리스트</h4>
+        <h4>내 자동차 리스트</h4>
     </div>
     <div class="col-auto">
         <a class="btn btn-sm btn-dark" href="{{ url_for('car.create') }}">+ 자동차등록</a>
