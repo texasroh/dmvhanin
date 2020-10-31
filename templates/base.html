@@ -48,7 +48,7 @@
             </div>
         </div>
         -->
-        <nav class="navbar sticky-top navbar-expand-sm nav-custom-color navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-sm nav-custom-color navbar-dark bg-dark">
             <div class="container">
                 <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='logo2.png') }}" class="logo" alt="dmvhanin-logo" height="30"></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,9 +99,9 @@
                             </li>
                         {% else %}
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}"><b>회원가입</b></a></li>
-                            <!--<li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">로그인</a></li>-->
+                            <!-- <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">로그인</a></li> -->
                             
-                            <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#loginModal"><b>로그인</b></a></li> 
+                            <li class="nav-item"><a class="nav-link" data-toggle="modal" href="#loginModal"><b>로그인</b></a></li>
                             
                             <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
