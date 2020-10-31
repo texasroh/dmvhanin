@@ -43,7 +43,7 @@ def search():
         "   (SELECT business_id, AVG(rate::float) as avg_rate "\
         "    FROM business_review WHERE rate IS NOT NULL GROUP BY business_id) b "\
         "ON a.business_id = b.business_id "\
-        "WHERE active_flag = TRUE, confirm = TRUE "\
+        "WHERE active_flag = TRUE AND confirm = TRUE "\
         "AND business_name_kor LIKE %s OR business_name_eng LIKE %s"\
         'ORDER BY -b.avg_rate, business_name_kor collate "ko_KR.utf8"',
         ['%'+biz_name+'%', '%'+biz_name+'%']
