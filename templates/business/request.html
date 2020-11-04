@@ -12,12 +12,10 @@
     <h5 class="modal-title"><b>비지니스 등록 신청</b></h5>
     <br>
     <p>업소등록을 신청하시면 24시간내 검토 후 이메일로 등록여부를 알려드립니다.</p>
-    <p>아래 업소명, 연락처, 주소, 간단한 소개 및 설명은 필수사항입니다.</p>
-    <p>홈페이지 및 사진은 옵션사항입니다.</p>
-    <p>온라인 비지니스의 경우에는 주소를 적지 않으셔도 됩니다.</p>
+    <p><span class="red">*</span> : 필수 입력사항</p>
     <hr>
     <form method="post" enctype="multipart/form-data">
-        <label for="business_name_kor">업소명</label>
+        <label for="business_name_kor">업소명 <span class="red">*</span></label></label>
         <div class="form-row form-group">
             <div class = "col-md-6">
                 <input type="text" class="form-control" id="business_name_kor" name="business_name_kor" placeholder="한글" required>
@@ -26,13 +24,13 @@
                 <input type="text" class="form-control" id="business_name_eng" name="business_name_eng" placeholder="English" required>
             </div>
         </div>
-        <label for="phone_number">연락처</label>
+        <label for="phone_number">연락처 (이메일 <span class="red">*</span></label>)</label>
         <div class="form-row form-group">
             <div class = "col-md-6">
-                <input type="tel" class="form-control" id="phone_number" name="phone_number" placeholder="전화번호" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="이메일" required>
             </div>
             <div class = "col-md-6">
-                <input type="email" class="form-control" id="email" name="email" placeholder="이메일" required>
+                <input type="tel" class="form-control" id="phone_number" name="phone_number" placeholder="전화번호">
             </div>
         </div>
         <div class="form-group">
@@ -41,12 +39,12 @@
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
-                <label for="city">City</label>
-                <input type="text" class="form-control" id="city" name="city">
+                <label for="city">City <span class="red">*</span></label></label>
+                <input type="text" class="form-control" id="city" name="city" required>
             </div>
             <div class="form-group col-md-4">
-                <label for="state">State</label>
-                <select id="state" class="form-control" name="state">
+                <label for="state">State <span class="red">*</span></label></label>
+                <select id="state" class="form-control" name="state" required>
                     <option selected hidden>Choose...</option>
                     <option value="DC">DC</option>
                     <option value="MD">MD</option>
@@ -54,8 +52,8 @@
                 </select>
             </div>
             <div class="form-group col-md-2">
-                <label for="zipcode">ZipCode</label>
-                <input type="text" class="form-control" id="zipcode" name="zipcode">
+                <label for="zipcode">ZipCode <span class="red">*</span></label></label>
+                <input type="text" class="form-control" id="zipcode" name="zipcode" required>
             </div>
         </div>
         <div class="form-group">
@@ -64,7 +62,7 @@
         </div>
         <div class="form-group">
             <label for="description">간단한 소개 / 설명</label>
-            <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+            <textarea class="form-control" id="description" name="description" rows="5"></textarea>
         </div>
         <div class="form-group">
             <label for="file1">사진첨부 (메뉴, 실내사진 등 최대 5장)</label>
