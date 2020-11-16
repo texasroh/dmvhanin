@@ -55,10 +55,10 @@ def register():
     nickname = ''
     email_addr = ''
     if request.method=='POST':
-        user_id = request.form['user_id']
+        user_id = request.form['user_id'].lower()
         nickname = request.form['nickname']
         if not nickname:
-            nickname = user_id
+            nickname = request.form['user_id']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
         email_addr = request.form['email']
@@ -130,7 +130,7 @@ def login():
         return redirect(url_for('index'))
     
     if request.method == 'POST':
-        user_id = request.form['user_id']
+        user_id = request.form['user_id'].lower()
         password = request.form['password']
         error = None
         user = db.select_row(
@@ -156,7 +156,7 @@ def login():
 def load_logged_in_user():
     # model login
     if request.method=='POST' and 'user_id' in request.form and 'password' in request.form and 'modallogin' in request.form:
-        user_id = request.form['user_id']
+        user_id = request.form['user_id'].lower()
         password = request.form['password']
         user = db.select_row(
             "SELECT * FROM user_acct WHERE user_id=%s and active_flag = true", [user_id]
@@ -281,14 +281,14 @@ def account_info():
                 flash("이메일을 입력하세요")
         elif type == 'nickname':
             nickname = request.form['nickname']
-            if not nickname or nickname == g.user['user_id']:
+            if not nickname or nickname.lower() == g.user['user_id']:
                 db.update_rows(
-                    "UPDATE user_acct SET nickname = %s WHERE user_id = %s", [g.user['user_id'], g.user['user_id']]
+                    "UPDATE user_acct SET nickname = %s WHERE user_id = %s", [nickname, g.user['user_id']]
                 )
                 flash('닉네임 변경 완료')
                 return redirect(url_for('auth.account_info'))
             elif (nickname.lower() not in Config.NOT_ALLOWED_USER_ID) and not db.select_row(
-                "SELECT * FROM user_acct WHERE nickname = %s OR user_id = %s", [nickname, nickname]
+                "SELECT * FROM user_acct WHERE nickname = %s OR user_id = %s", [nickname, nickname.lower()]
             ):
                 db.update_rows(
                     "UPDATE user_acct SET nickname = %s WHERE user_id = %s", [nickname, g.user['user_id']]
