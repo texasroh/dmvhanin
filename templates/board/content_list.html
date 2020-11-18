@@ -31,7 +31,7 @@
                     </div>
                     <div class="col-auto text-right">
                         <div>
-                            {{ content['views'] }}
+                            {% if g.user and g.user['admin_flag'] %}{{ content['views'] }}{% endif %}
                         </div>
                         <div class="text-danger">
                             {% if content['count'] %}
