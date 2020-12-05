@@ -172,7 +172,7 @@ def content_list(board_name):
         content_list['created'] = content_list['created'].dt.tz_convert('US/Eastern').apply(lambda x: x.strftime("%Y-%m-%d"))
         content_list = content_list.to_dict('records')
     return render_template('board/content_list.html', board_list = board_list.to_dict('records'), content_list=content_list,
-                            category=category, board_name=board_name, curr_page = curr_page, page_list = page_list, search=search)
+                            category=category, board_name=board_name, curr_page = curr_page, last_page= last_page, page_list = page_list, search=search)
     
     
 @bp.route('/<board_name>/<int:board_id>', methods=('GET', 'POST'))

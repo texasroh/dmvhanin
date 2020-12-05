@@ -81,6 +81,14 @@
                 {% endif %}
             </li>
             {% endfor %}
+            {% if page_list[-1] < last_page %}
+            <li class="page-item">
+                <span class="page-link">
+                    ...
+                    <span class="sr-only">(current)</span>
+                </span>
+            </li>
+            {% endif %}
         </ul>
     </nav>
     {% else %}
