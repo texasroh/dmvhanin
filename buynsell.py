@@ -102,7 +102,7 @@ def modify(board_name, board_id):
             flash('수정 완료')
             return redirect(url_for('{}.content'.format(category), board_name = board_name, board_id = board_id))
         
-    board_alias = board_list.loc[board_list['board_name'] == board_name, 'board_alias'][0]
+    board_alias = board_list.loc[board_list['board_name'] == board_name, 'board_alias'].to_list()[0]
     return render_template('board/write.html', board_list = board_list.to_dict('records'),
                             title=content['title'], content=content['contents'], board_alias = board_alias, modify = True)
     

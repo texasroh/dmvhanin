@@ -7,13 +7,15 @@
 {% endblock %}
 
 {% block business_content %}
-    {% for cat1, cat2_list in cat_data.items() %}
-        <h4><span class="badge badge-secondary">{{ cat1 }}</span></h4>
-            <ul class="nav">
-            {% for cat2 in cat2_list %}
-                <li class="nav-item">| <a class = "btn" href="{{ url_for('business.business_list', category_id = cat2['category_id']) }}">{{ cat2['category2'] }}</a>&nbsp </li>
-            {% endfor %}
-            </ul>
-        <br>
-    {% endfor %}
+{% for cat1, cat2_list in cat_data.items() %}
+    <h4><span class="badge badge-secondary">{{ cat1 }}</span></h4>
+        <ul class="nav">
+        {% for cat2 in cat2_list %}
+            <li class="nav-item">| <a class = "btn" href="{{ url_for('business.business_list', category_id = cat2['category_id']) }}">{{ cat2['category2'] }}</a>&nbsp </li>
+        {% endfor %}
+        </ul>
+    <br>
+{% endfor %}
+<a class="btn btn-sm btn-info" href="{{ url_for('business.register_request')}}" role="button">업소등록/수정 신청</a>
+    
 {% endblock %}
