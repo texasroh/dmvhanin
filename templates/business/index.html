@@ -7,17 +7,13 @@
 {% endblock %}
 
 {% block business_content %}
-<ul>
     {% for cat1, cat2_list in cat_data.items() %}
-        <li>
-        {{ cat1 }}
+        <h4><span class="badge badge-secondary">{{ cat1 }}</span></h4>
             <ul class="nav">
             {% for cat2 in cat2_list %}
-                <li class="nav-item">| <a class = "" href="{{ url_for('business.business_list', category_id = cat2['category_id']) }}">{{ cat2['category2'] }}</a>&nbsp </li>
+                <li class="nav-item">| <a class = "btn" href="{{ url_for('business.business_list', category_id = cat2['category_id']) }}">{{ cat2['category2'] }}</a>&nbsp </li>
             {% endfor %}
             </ul>
-        </li>
         <br>
     {% endfor %}
-</ul>
 {% endblock %}
