@@ -14,7 +14,7 @@
             <div class="form-group row">
 				<label class="col-sm-5 col-form-label" for="email">이메일</label>
                 <div class="col-sm-7">
-                    <input class="form-control" type="email" name="email" id="email" value="{{ g.user['email'] }}"required>
+                    <input class="form-control" type="email" name="email" id="email" {% if g.user['email'] %}value="{{ g.user['email'] }}"{% endif %}required>
                 </div>
 			</div>
             <div class="row justify-content-end">
