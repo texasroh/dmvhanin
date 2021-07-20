@@ -23,9 +23,16 @@ def generate_hash(s=''):
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
-    if g.user:
-        return redirect(url_for('index'))
+    
     code = request.args.get('code', '')
+    
+    if g.user:
+        session.clear()
+        if code:
+            return redirect(url_for('auth.register', code=code))
+        else:
+            return redirect(url_for('auth.register'))
+        
     if code:
         try:
             agent = register_decode(str(code))
